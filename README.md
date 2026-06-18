@@ -242,6 +242,82 @@ MIT – feel free to use, modify, and distribute.
 
 ---
 
+---
+
+##  Create the Google Drive API credentials
+
+1. **Go to the Google Cloud Console**  
+   Open [console.cloud.google.com](https://console.cloud.google.com) and sign in with the Google account you want to use for backups.
+
+2. **Create a new project**  
+   - Click the project dropdown (top left) → **New Project**.  
+   - Name it `ERP System` (or anything).  
+   - Click **Create**. Wait a few seconds for it to switch to the new project.
+
+3. **Enable the Google Drive API**  
+   - In the search bar, type `Google Drive API`.  
+   - Click the result, then click **Enable**.  
+   - After a moment you’ll see “API Enabled”.
+
+4. **Configure the OAuth consent screen**  
+   - Navigate to **APIs & Services → OAuth consent screen**.  
+   - Choose **External** (unless you have a Google Workspace account). Click **Create**.  
+   - Fill in the required fields:  
+     - **App name**: e.g. `My Private ERP`  
+     - **User support email**: your email  
+     - **Developer contact email**: your email  
+   - Click **Save and Continue** (skip scopes).  
+   - **Test users**: click **Add Users**, enter your own email, then **Save and Continue**.  
+   - Click **Back to Dashboard**.
+
+5. **Create an OAuth 2.0 Client ID**  
+   - Go to **Credentials** → **Create Credentials → OAuth client ID**.  
+   - **Application type**: `Web application`.  
+   - **Name**: `ERP Web Client`.  
+   - **Authorised JavaScript origins**: click **Add URI** and enter your GitHub Pages origin **exactly**:  
+     ```
+     https://your-username.github.io
+     ```  
+     (replace `your-username` with your actual GitHub username – no trailing slash, no path).  
+   - Click **Create**.  
+   - **Copy the Client ID** that appears – you’ll need it in the next step.
+
+---
+
+## 🔗 Part 3 – Connect the ERP to Google Drive
+
+1. **Open your ERP** at your GitHub Pages URL:  
+   `https://your-username.github.io/my-erp/`
+
+2. **Go to Settings**  
+   Click **⚙️ Settings** in the left sidebar.
+
+3. **Enter the Client ID**  
+   Scroll down to the **🔗 Google Drive Sync** section.  
+   Paste your **Client ID** into the `Google Client ID` field.
+
+4. **Save settings**  
+   Click the **Save Settings** button at the top of the page.
+
+5. **Sign in with Google**  
+   Click the **G  Sign in with Google** button in the same card.  
+   - A Google pop‑up will open. Choose your Google account and grant permission.  
+   - After granting, the button changes to **✅ Connected to Google Drive**.
+
+6. **Syncing starts automatically**  
+   - Every change you make in the ERP is automatically saved to your Google Drive within **2 seconds**.  
+   - You can also click the **🔄 Sync** button in the top bar to force a manual sync at any time.  
+   - The top‑bar indicator shows `Online` / `Offline` / `Syncing…`.
+
+---
+
+## ✅ Done!
+
+Your ERP is now **online** (the page itself is public, but your business data stays **private** inside your personal Google Drive).  
+A file called `erp_data.json` will appear in your Drive – it contains all your business profiles and can be used to restore your data on any other device.
+
+---
+
 ## 🙏 Credits
 - **Developed by:** AI
 - **Instructed & Constructed by:** MD. JUNAYED AL HABIB
