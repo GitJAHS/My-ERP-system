@@ -157,7 +157,7 @@
         .hamburger-btn { background:none; border:none; cursor:pointer; font-size:1.5rem; color:var(--md-on-surface); padding:6px; border-radius:50%; width:40px; height:40px; display:flex; align-items:center; justify-content:center; transition:background 0.2s; }
         .hamburger-btn:hover { background:var(--md-sys-color-surface-container-high); }
         .topbar-title { font-size:1.15rem; font-weight:700; flex:1; }
-        .topbar-actions { display:flex; gap:6px; align-items:center; }
+        .topbar-actions { display:flex; gap:6px; align-items:center; flex-wrap:wrap; }
         .btn-icon { background:none; border:none; cursor:pointer; font-size:1.1rem; padding:6px; border-radius:50%; width:38px; height:38px; display:flex; align-items:center; justify-content:center; color:var(--md-on-surface-variant); transition:background 0.2s; position:relative; }
         .btn-icon:hover { background:var(--md-sys-color-surface-container-high); }
         .alert-badge { position:absolute; top:-2px; right:-2px; background:var(--md-error); color:white; border-radius:50%; padding:2px 5px; font-size:0.65rem; font-weight:700; min-width:16px; text-align:center; line-height:1; display:none; }
@@ -168,7 +168,7 @@
         .kpi-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:14px; }
         .kpi-card { background:var(--md-sys-color-surface-container-low); border-radius:var(--radius-lg); padding:16px 18px; border:1px solid var(--md-outline-variant); box-shadow:var(--elevation-1); border-left:4px solid var(--md-primary); transition:all 0.3s; }
         .kpi-value { font-size:1.7rem; font-weight:700; }
-        .kpi-label { font-size:0.73rem; color:var(--md-on-surface-variant); text-transform:uppercase; letter-spacing:0.05em; font-weight:600; }
+        .kpi-label { font-size:0.73rem; color:var(--md-on-surface-variant); text-transform:uppercase; letter-spacing:0.05em; font-weight:600; display:flex; align-items:center; gap:4px; }
         .table-shell { overflow-x:auto; max-height:400px; overflow-y:auto; border-radius:var(--radius-sm); border:1px solid var(--md-outline-variant); }
         table { width:100%; border-collapse:collapse; font-size:0.84rem; }
         table th, table td { padding:10px 12px; text-align:left; border-bottom:1px solid var(--md-outline-variant); white-space:nowrap; }
@@ -235,9 +235,9 @@
             vertical-align: middle;
             transition: background 0.3s;
         }
-        .sync-dot.offline { background: #9e9e9e; }
-        .sync-dot.online { background: #4caf50; }
-        .sync-dot.error { background: #f44336; }
+        .sync-dot.offline { background: #f44336; animation: pulseSlow 2s infinite; }
+        .sync-dot.online { background: #4caf50; animation: pulseSlow 2s infinite; }
+        .sync-dot.error { background: #ffeb3b; animation: pulseFast 0.8s infinite; }
         .sync-dot.syncing {
             background: transparent;
             border: 2px solid #ff9800;
@@ -246,10 +246,117 @@
             width: 12px;
             height: 12px;
         }
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes pulseSlow { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+        @keyframes pulseFast { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
+
+        /* Uptime widget */
+        .uptime-widget {
+            font-size: 0.75rem;
+            color: var(--md-on-surface-variant);
+            line-height: 1.3;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            white-space: nowrap;
+            cursor: default;
         }
+        .uptime-widget span {
+            font-family: 'Segoe UI', monospace;
+            letter-spacing: 0.02em;
+        }
+
+        /* Calculator styles */
+        .calculator-popup {
+            position: fixed;
+            top: 100px;
+            left: 100px;
+            width: 300px;
+            background: var(--md-sys-color-surface-container-lowest);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--elevation-5);
+            z-index: 500;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            cursor: default;
+            user-select: none;
+        }
+        .calculator-popup.open { display: flex; }
+        .calc-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            background: var(--md-sys-color-surface-container-high);
+            border-bottom: 1px solid var(--md-outline-variant);
+            cursor: move;
+        }
+        .calc-header h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--md-on-surface);
+        }
+        .calc-close {
+            background: none;
+            border: none;
+            color: var(--md-on-surface-variant);
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .calc-close:hover { background: var(--md-sys-color-surface-container-highest); }
+        .calc-body {
+            padding: 16px;
+        }
+        .calc-display {
+            background: var(--md-sys-color-surface-container-high);
+            border-radius: var(--radius-sm);
+            padding: 12px;
+            margin-bottom: 16px;
+            text-align: right;
+            min-height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            font-size: 1.5rem;
+            font-weight: 500;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+        .calc-buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
+        .calc-btn {
+            background: var(--md-sys-color-surface-container-high);
+            border: none;
+            border-radius: var(--radius-full);
+            padding: 12px 0;
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--md-on-surface);
+            cursor: pointer;
+            transition: background 0.15s, transform 0.1s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .calc-btn:active {
+            transform: scale(0.92);
+            background: var(--md-outline-variant);
+        }
+        .calc-btn.operator { background: var(--md-secondary-container); color: var(--md-on-secondary-container); }
+        .calc-btn.operator:active { background: var(--md-primary-container); }
+        .calc-btn.equal { background: var(--md-primary); color: var(--md-on-primary); }
+        .calc-btn.equal:active { background: var(--md-on-primary-container); }
     </style>
 </head>
 <body>
@@ -298,6 +405,11 @@
             <button class="btn btn-sm btn-outlined" id="profileSwitcherBtn" onclick="ERP.openProfileSwitcher()"><span class="material-symbols-rounded">business</span> <span id="profileNameDisplay">Default Business</span></button>
             <button class="btn-icon" id="alertBellBtn" title="Alerts" onclick="ERP.showAlerts()"><span class="material-symbols-rounded">notifications</span><span class="alert-badge" id="alertCount"></span></button>
             <span id="liveClock" style="font-size:0.78rem;color:var(--md-on-surface-variant)"></span>
+            <div class="uptime-widget" id="uptimeWidget">
+                <span id="dailyUptime">Daily: 0h 0m 0s</span>
+                <span id="lifetimeUptime">Lifetime: 0d 0h 0m 0s</span>
+            </div>
+            <button class="btn-icon" id="calcToggleBtn" title="Calculator"><span class="material-symbols-rounded">calculate</span></button>
             <button class="btn-icon" id="themeToggleBtn"><span class="material-symbols-rounded">routine</span></button>
         </div>
     </div>
@@ -308,6 +420,42 @@
 <div id="toastBox" style="position:fixed;bottom:20px;right:20px;z-index:300;display:flex;flex-direction:column;gap:6px"></div>
 <datalist id="categorySuggestions"></datalist>
 <datalist id="brandSuggestions"></datalist>
+
+<!-- Material You Calculator Popup -->
+<div class="calculator-popup" id="calcPopup">
+    <div class="calc-header" id="calcHeader">
+        <h4>Calculator</h4>
+        <button class="calc-close" id="calcCloseBtn"><span class="material-symbols-rounded">close</span></button>
+    </div>
+    <div class="calc-body">
+        <div class="calc-display" id="calcDisplay">0</div>
+        <div class="calc-buttons">
+            <button class="calc-btn" data-action="clear">C</button>
+            <button class="calc-btn" data-action="backspace"><span class="material-symbols-rounded">backspace</span></button>
+            <button class="calc-btn" data-action="percent">%</button>
+            <button class="calc-btn operator" data-action="operator" data-value="/">÷</button>
+
+            <button class="calc-btn" data-action="digit" data-value="7">7</button>
+            <button class="calc-btn" data-action="digit" data-value="8">8</button>
+            <button class="calc-btn" data-action="digit" data-value="9">9</button>
+            <button class="calc-btn operator" data-action="operator" data-value="*">×</button>
+
+            <button class="calc-btn" data-action="digit" data-value="4">4</button>
+            <button class="calc-btn" data-action="digit" data-value="5">5</button>
+            <button class="calc-btn" data-action="digit" data-value="6">6</button>
+            <button class="calc-btn operator" data-action="operator" data-value="-">−</button>
+
+            <button class="calc-btn" data-action="digit" data-value="1">1</button>
+            <button class="calc-btn" data-action="digit" data-value="2">2</button>
+            <button class="calc-btn" data-action="digit" data-value="3">3</button>
+            <button class="calc-btn operator" data-action="operator" data-value="+">+</button>
+
+            <button class="calc-btn" data-action="digit" data-value="0" style="grid-column: span 2;">0</button>
+            <button class="calc-btn" data-action="decimal">.</button>
+            <button class="calc-btn equal" data-action="equal">=</button>
+        </div>
+    </div>
+</div>
 
 <script>
 (function(){
@@ -413,10 +561,10 @@ const $=s=>document.querySelector(s),$$=s=>document.querySelectorAll(s);
 let lastAlertCount = 0;
 function playAlertSound(){ try { const audioCtx = new (window.AudioContext||window.webkitAudioContext)(); const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain(); osc.connect(gain); gain.connect(audioCtx.destination); osc.type='sine'; osc.frequency.setValueAtTime(800, audioCtx.currentTime); gain.gain.setValueAtTime(0.3, audioCtx.currentTime); osc.start(); osc.stop(audioCtx.currentTime+0.15); } catch(e) {} }
 function toast(msg){const box=$('#toastBox'),el=document.createElement('div');el.style.cssText='padding:10px 18px;border-radius:20px;background:var(--md-inverse-surface);color:var(--md-inverse-on-surface);font-size:0.85rem;font-weight:500;box-shadow:var(--elevation-2);animation:fadeIn 0.3s;';el.textContent=msg;box.appendChild(el);setTimeout(()=>{el.style.opacity='0';el.style.transition='opacity 0.3s';setTimeout(()=>el.remove(),300)},2800)}
-function showModal(title,bodyHTML,onSave){const place=$('#modalPlace');place.innerHTML=`<div class="modal-mask" id="modalMask"><div class="modal-panel"><h3>${title}</h3><div class="modal-body">${bodyHTML}</div><div class="flex-between mt-4"><button class="btn btn-outlined cancel-modal" onclick="closeModal()">Cancel</button><button class="btn btn-filled save-modal">Save</button></div></div></div>`;place.classList.remove('hidden');place.querySelector('.save-modal').addEventListener('click',()=>{if(onSave)onSave(place.querySelector('.modal-panel'))});}
+function showModal(title,bodyHTML,onSave){ closeModal(); closeModal2(); const place=$('#modalPlace'); place.innerHTML=`<div class="modal-mask" id="modalMask"><div class="modal-panel"><h3>${title}</h3><div class="modal-body">${bodyHTML}</div><div class="flex-between mt-4"><button class="btn btn-outlined cancel-modal" onclick="closeModal()">Cancel</button><button class="btn btn-filled save-modal">Save</button></div></div></div>`; place.classList.remove('hidden'); place.querySelector('.save-modal').addEventListener('click',()=>{if(onSave)onSave(place.querySelector('.modal-panel'))}); }
 function closeModal(){$('#modalPlace').classList.add('hidden');$('#modalPlace').innerHTML=''}
 window.closeModal = closeModal;
-function showModal2(title,bodyHTML,onSave){const place=$('#modalPlace2');place.innerHTML=`<div class="modal-mask" id="modalMask2"><div class="modal-panel"><h3>${title}</h3><div class="modal-body">${bodyHTML}</div><div class="flex-between mt-4"><button class="btn btn-outlined cancel-modal2" onclick="closeModal2()">Cancel</button><button class="btn btn-filled save-modal2">Save</button></div></div></div>`;place.classList.remove('hidden');place.querySelector('.save-modal2').addEventListener('click',()=>{if(onSave)onSave(place.querySelector('.modal-panel'))});}
+function showModal2(title,bodyHTML,onSave){ closeModal(); closeModal2(); const place=$('#modalPlace2'); place.innerHTML=`<div class="modal-mask" id="modalMask2"><div class="modal-panel"><h3>${title}</h3><div class="modal-body">${bodyHTML}</div><div class="flex-between mt-4"><button class="btn btn-outlined cancel-modal2" onclick="closeModal2()">Cancel</button><button class="btn btn-filled save-modal2">Save</button></div></div></div>`; place.classList.remove('hidden'); place.querySelector('.save-modal2').addEventListener('click',()=>{if(onSave)onSave(place.querySelector('.modal-panel'))}); }
 function closeModal2(){$('#modalPlace2').classList.add('hidden');$('#modalPlace2').innerHTML=''}
 window.closeModal2 = closeModal2;
 function escapeHtml(text) { if (!text) return text; return String(text).replace(/[&<>"'`]/g, function(m) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;', '`': '&#96;' }[m]; }); }
@@ -445,7 +593,7 @@ window._applyDateFilter = function(tableId, dateFieldIndex) {
         const cellDate = dateAttr ? new Date(dateAttr) : new Date(cell.textContent.trim());
         let show = true;
         if (isNaN(cellDate.getTime())) {
-            show = true; // keep visible if no valid date
+            show = true;
         } else {
             if (from && cellDate < from) show = false;
             if (to && cellDate > to) show = false;
@@ -500,21 +648,12 @@ function updateSyncStatus(status) {
     if (el) el.textContent = status;
     const dot = document.getElementById('syncDot');
     if (!dot) return;
-    // Remove all state classes
     dot.className = 'sync-dot';
     switch(status) {
-        case 'Offline':
-            dot.classList.add('offline');
-            break;
-        case 'Online':
-            dot.classList.add('online');
-            break;
-        case 'Syncing...':
-            dot.classList.add('syncing');
-            break;
-        case 'Error':
-            dot.classList.add('error');
-            break;
+        case 'Offline': dot.classList.add('offline'); break;
+        case 'Online': dot.classList.add('online'); break;
+        case 'Syncing...': dot.classList.add('syncing'); break;
+        case 'Error': dot.classList.add('error'); break;
     }
 }
 
@@ -557,16 +696,14 @@ async function saveToDrive() {
         const fileId = await findOrCreateErpFile();
         await fetch(`https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=media`, {
             method: 'PATCH',
-            headers: {
-                Authorization: `Bearer ${googleToken}`,
-                'Content-Type': 'application/json',
-            },
+            headers: { Authorization: `Bearer ${googleToken}`, 'Content-Type': 'application/json' },
             body: JSON.stringify(exportObj),
         });
         updateSyncStatus('Online');
     } catch(e) {
         updateSyncStatus('Error');
         console.error(e);
+        throw e;
     }
 }
 
@@ -575,23 +712,14 @@ async function findOrCreateErpFile() {
         headers: { Authorization: `Bearer ${googleToken}` }
     });
     const data = await res.json();
-    if (data.files && data.files.length > 0) {
-        return data.files[0].id;
-    } else {
-        const createRes = await fetch('https://www.googleapis.com/drive/v3/files', {
-            method: 'POST',
-            headers: {
-                Authorization: `Bearer ${googleToken}`,
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                name: 'erp_data.json',
-                mimeType: 'application/json',
-            }),
-        });
-        const file = await createRes.json();
-        return file.id;
-    }
+    if (data.files && data.files.length > 0) return data.files[0].id;
+    const createRes = await fetch('https://www.googleapis.com/drive/v3/files', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${googleToken}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: 'erp_data.json', mimeType: 'application/json' }),
+    });
+    const file = await createRes.json();
+    return file.id;
 }
 
 function buildExportObject() {
@@ -616,10 +744,7 @@ function debouncedSyncToDrive() {
 }
 
 function syncNow() {
-    if (!googleToken) {
-        toast('Sign in with Google first (Settings page)');
-        return;
-    }
+    if (!googleToken) { toast('Sign in with Google first (Settings page)'); return; }
     updateSyncStatus('Syncing...');
     saveToDrive().then(() => {
         updateSyncStatus('Online');
@@ -632,18 +757,12 @@ function syncNow() {
 
 function googleSignIn() {
     const clientId = DB._data.config.settings.googleClientId;
-    if (!clientId) {
-        toast('Please enter your Google Client ID in the field above first');
-        return;
-    }
+    if (!clientId) { toast('Please enter your Google Client ID in the field above first'); return; }
     const client = google.accounts.oauth2.initTokenClient({
         client_id: clientId,
         scope: 'https://www.googleapis.com/auth/drive.file',
         callback: (tokenResponse) => {
-            if (tokenResponse.error) {
-                toast('Google sign-in failed: ' + tokenResponse.error);
-                return;
-            }
+            if (tokenResponse.error) { toast('Google sign-in failed: ' + tokenResponse.error); return; }
             googleToken = tokenResponse.access_token;
             sessionStorage.setItem('erp_google_token', googleToken);
             updateSyncStatus('Online');
@@ -668,37 +787,22 @@ function initGoogleButton() {
     if (!btn) return;
     if (googleToken) {
         btn.textContent = '✅ Connected to Google Drive';
-        btn.classList.remove('btn-outlined');
-        btn.classList.add('btn-filled');
+        btn.classList.remove('btn-outlined'); btn.classList.add('btn-filled');
         btn.onclick = googleSignOut;
         updateSyncStatus('Online');
     } else {
         btn.textContent = 'G  Sign in with Google';
-        btn.classList.remove('btn-filled');
-        btn.classList.add('btn-outlined');
+        btn.classList.remove('btn-filled'); btn.classList.add('btn-outlined');
         btn.onclick = googleSignIn;
     }
 }
 
 // ==================== SIGN OUT ====================
-function signOut() {
-    if (googleToken) {
-        googleSignOut();
-    } else {
-        toast('Already signed out');
-    }
-}
+function signOut() { if (googleToken) googleSignOut(); else toast('Already signed out'); }
 
 // ==================== AUDIT LOG ====================
 function addAudit(action, details){
-    DB._data.auditLog.push({
-        id: DB.uid('AUDIT'),
-        timestamp: DB.now(),
-        user: 'System',
-        role: 'admin',
-        action: action,
-        details: details
-    });
+    DB._data.auditLog.push({ id: DB.uid('AUDIT'), timestamp: DB.now(), user: 'System', role: 'admin', action, details });
     if(DB._data.auditLog.length > 500) DB._data.auditLog = DB._data.auditLog.slice(-500);
 }
 
@@ -742,9 +846,7 @@ function renderAdvisor(){
                         <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;">`;
                     if (supplier) {
                         html += `<button class="btn btn-tonal btn-sm" onclick="window.open('tel:${supplier.phone}')"><span class="material-symbols-rounded">call</span> Call ${escapeHtml(supplier.name)}</button>`;
-                        if (supplier.email) {
-                            html += `<button class="btn btn-tonal btn-sm" onclick="window.location.href='mailto:${supplier.email}?subject=Reorder%20${encodeURIComponent(product.basicInfo.name)}'"><span class="material-symbols-rounded">mail</span> Mail ${escapeHtml(supplier.name)}</button>`;
-                        }
+                        if (supplier.email) html += `<button class="btn btn-tonal btn-sm" onclick="window.location.href='mailto:${supplier.email}?subject=Reorder%20${encodeURIComponent(product.basicInfo.name)}'"><span class="material-symbols-rounded">mail</span> Mail ${escapeHtml(supplier.name)}</button>`;
                     }
                     html += `<button class="btn btn-filled btn-sm" onclick="ERP.quickCreatePurchase('${product.id}')"><span class="material-symbols-rounded">shopping_cart</span> Create Purchase</button>`;
                     html += `</div></div>`;
@@ -802,18 +904,11 @@ ERP.quickCreatePurchase = function(productId) {
         DB._data.purchases.push(purchase);
         if (status === 'completed') {
             const pIdx = DB._data.products.findIndex(p=>p.id===productId);
-            if (pIdx>=0) {
-                DB._data.products[pIdx].stock.quantity += qty;
-                DB._data.products[pIdx].stock.available += qty;
-            }
+            if (pIdx>=0) { DB._data.products[pIdx].stock.quantity += qty; DB._data.products[pIdx].stock.available += qty; }
             DB._data.finance.expenses.push({id:DB.uid('EXP'),category:'Purchase',amount:totalCost,date:DB.now(),note:'Purchase '+purchase.id});
         }
         addAudit('create', `Purchase ${purchase.id} created`);
-        DB.save();
-        closeModal();
-        navigate('purchases');
-        toast('Purchase created');
-        updateAlertBadge();
+        DB.save(); closeModal(); navigate('purchases'); toast('Purchase created'); updateAlertBadge();
     });
 };
 
@@ -855,9 +950,7 @@ function mailInvoiceWithPDF(id) {
     const termsHtml = inv.terms ? `<div class="terms"><h3>Terms & Conditions</h3><p>${escapeHtml(inv.terms).replace(/\n/g,'<br>')}</p></div>` : '';
     const termsAppliedHtml = inv.termsApplied ? `<p><strong>Terms & Conditions Applied</strong></p>` : '';
     let promoHtml = '';
-    if (inv.promo && inv.promo.discountAmount > 0) {
-        promoHtml = `<div class="promo-info"><p><strong>Promo Applied:</strong> ${escapeHtml(inv.promo.code)} - Discount: ${DB.fmtMoney(inv.promo.discountAmount)}</p></div>`;
-    }
+    if (inv.promo && inv.promo.discountAmount > 0) promoHtml = `<div class="promo-info"><p><strong>Promo Applied:</strong> ${escapeHtml(inv.promo.code)} - Discount: ${DB.fmtMoney(inv.promo.discountAmount)}</p></div>`;
     const preparedBy = inv.seller ? `<p class="seller-line"><strong>Prepared by:</strong> ${escapeHtml(inv.seller.name)} (${escapeHtml(inv.seller.role||'Employee')})</p>` : '';
 
     const pdfContent = `
@@ -890,26 +983,21 @@ function mailInvoiceWithPDF(id) {
         </div>
     `;
 
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = pdfContent;
-    document.body.appendChild(tempDiv);
-    html2pdf().set({
-        margin: 0.2,
-        filename: `Invoice_${inv.id}.pdf`,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, logging: false },
-        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
-    }).from(tempDiv).save().then(() => {
-        document.body.removeChild(tempDiv);
-    }).catch(() => {
-        document.body.removeChild(tempDiv);
-        toast('PDF generation failed');
-    });
+    try {
+        const tempDiv = document.createElement('div'); tempDiv.innerHTML = pdfContent; document.body.appendChild(tempDiv);
+        html2pdf().set({
+            margin: 0.2, filename: `Invoice_${inv.id}.pdf`, image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2, logging: false }, jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+        }).from(tempDiv).save().then(() => { document.body.removeChild(tempDiv); })
+          .catch(() => { document.body.removeChild(tempDiv); toast('PDF generation failed'); });
+    } catch(e) { toast('PDF library not available'); }
 }
 
 // ==================== DASHBOARD ====================
 function renderDashboard(){
     const d = DB._data;
+    const today = new Date().toISOString().slice(0,10);
+
     const tc = d.customers.length;
     const tp = d.products.filter(p=>p.status==='active').length;
     const tr = d.invoices.reduce((s,i)=>s+(i.calculations?.grandTotal||0),0);
@@ -919,17 +1007,67 @@ function renderDashboard(){
     const np = tpd - te;
     const ae = d.employees.filter(e=>e.jobInfo?.status==='active').length;
     const totalPurchased = d.purchases.filter(p=>p.status==='completed').reduce((s,p)=>s+(p.totalCost||0),0);
+
+    const dailySalesCount = d.sales.filter(s => s.date && s.date.startsWith(today)).length;
+    const dailyPurchCount = d.purchases.filter(p => p.date && p.date.startsWith(today)).length;
+    const dailyRevenue = d.sales.filter(s => s.date && s.date.startsWith(today)).reduce((sum, s) => sum + (s.totalAmount || 0), 0);
+    const dailyExpenses = d.finance.expenses.filter(e => e.date && e.date.startsWith(today)).reduce((sum, e) => sum + (e.amount || 0), 0);
+    const dailyProfit = dailyRevenue - dailyExpenses;
+    const dailyOrders = d.invoices.filter(i => i.createdAt && i.createdAt.startsWith(today)).length;
+
+    let dailyProductsSold = 0;
+    d.sales.filter(s => s.date && s.date.startsWith(today)).forEach(s => {
+        (s.items || []).forEach(it => dailyProductsSold += it.quantity || 0);
+    });
+
+    let dailyStockAdded = 0;
+    d.purchases.filter(p => p.status === 'completed' && p.date && p.date.startsWith(today)).forEach(p => {
+        (p.items || []).forEach(it => dailyStockAdded += it.quantity || 0);
+    });
+
+    let dailyStockRemoved = 0;
+    d.invoices.filter(i => i.stockDeducted && i.createdAt && i.createdAt.startsWith(today)).forEach(i => {
+        (i.items || []).forEach(it => dailyStockRemoved += it.quantity || 0);
+    });
+
+    const lowStockCount = d.products.filter(p => p.status === 'active' && (p.stock?.available || 0) < (p.stock?.reorderLevel || 0)).length;
+    const outOfStockCount = d.products.filter(p => p.status === 'active' && (p.stock?.available || 0) === 0).length;
+    const totalProductsAll = d.products.length;
+    const totalSKUs = new Set(d.products.map(p => p.sku).filter(Boolean)).size;
+    const totalCategories = new Set(d.products.map(p => p.basicInfo?.category).filter(Boolean)).size;
+    const totalBrands = new Set(d.products.map(p => p.basicInfo?.brand).filter(Boolean)).size;
+
     const recent = [...d.invoices].sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt)).slice(0,5);
-    return `<div class="kpi-grid">
-        <div class="kpi-card"><div class="kpi-value">${tc}</div><div class="kpi-label">Total Customers</div></div>
-        <div class="kpi-card"><div class="kpi-value">${tp}</div><div class="kpi-label">Active Products</div></div>
-        <div class="kpi-card"><div class="kpi-value">${DB.fmtMoney(tr)}</div><div class="kpi-label">Total Revenue</div></div>
-        <div class="kpi-card"><div class="kpi-value">${DB.fmtMoney(tpd)}</div><div class="kpi-label">Total Paid</div></div>
-        <div class="kpi-card"><div class="kpi-value">${DB.fmtMoney(td)}</div><div class="kpi-label">Outstanding Due</div></div>
-        <div class="kpi-card"><div class="kpi-value">${DB.fmtMoney(np)}</div><div class="kpi-label">Net Profit</div></div>
-        <div class="kpi-card"><div class="kpi-value">${ae}</div><div class="kpi-label">Active Employees</div></div>
-        <div class="kpi-card"><div class="kpi-value">${DB.fmtMoney(totalPurchased)}</div><div class="kpi-label">Total Purchased</div></div>
+
+    return `
+    <div class="kpi-grid">
+        <div class="kpi-card"><div class="kpi-value">${tc}</div><div class="kpi-label"><span class="material-symbols-rounded" style="font-size:18px;">groups</span> Total Customers</div></div>
+        <div class="kpi-card"><div class="kpi-value">${tp}</div><div class="kpi-label"><span class="material-symbols-rounded" style="font-size:18px;">inventory_2</span> Active Products</div></div>
+        <div class="kpi-card"><div class="kpi-value">${DB.fmtMoney(tr)}</div><div class="kpi-label"><span class="material-symbols-rounded" style="font-size:18px;">payments</span> Total Revenue</div></div>
+        <div class="kpi-card"><div class="kpi-value">${DB.fmtMoney(tpd)}</div><div class="kpi-label"><span class="material-symbols-rounded" style="font-size:18px;">check_circle</span> Total Paid</div></div>
+        <div class="kpi-card"><div class="kpi-value">${DB.fmtMoney(td)}</div><div class="kpi-label"><span class="material-symbols-rounded" style="font-size:18px;">pending</span> Outstanding Due</div></div>
+        <div class="kpi-card"><div class="kpi-value">${DB.fmtMoney(np)}</div><div class="kpi-label"><span class="material-symbols-rounded" style="font-size:18px;">trending_up</span> Net Profit</div></div>
+        <div class="kpi-card"><div class="kpi-value">${ae}</div><div class="kpi-label"><span class="material-symbols-rounded" style="font-size:18px;">engineering</span> Active Employees</div></div>
+        <div class="kpi-card"><div class="kpi-value">${DB.fmtMoney(totalPurchased)}</div><div class="kpi-label"><span class="material-symbols-rounded" style="font-size:18px;">shopping_cart</span> Total Purchased</div></div>
+
+        <div class="kpi-card"><div class="kpi-value">${DB.fmtMoney(dailyProfit)}</div><div class="kpi-label"><span class="material-symbols-rounded" style="font-size:18px;">savings</span> Daily Profit</div></div>
+        <div class="kpi-card"><div class="kpi-value">${dailySalesCount}</div><div class="kpi-label"><span class="material-symbols-rounded" style="font-size:18px;">point_of_sale</span> Daily Sales</div></div>
+        <div class="kpi-card"><div class="kpi-value">${dailyPurchCount}</div><div class="kpi-label"><span class="material-symbols-rounded" style="font-size:18px;">download</span> Daily Purchases</div></div>
+        <div class="kpi-card"><div class="kpi-value">${DB.fmtMoney(dailyRevenue)}</div><div class="kpi-label"><span class="material-symbols-rounded" style="font-size:18px;">payments</span> Daily Revenue</div></div>
+        <div class="kpi-card"><div class="kpi-value">${DB.fmtMoney(dailyExpenses)}</div><div class="kpi-label"><span class="material-symbols-rounded" style="font-size:18px;">receipt_long</span> Daily Expenses</div></div>
+        <div class="kpi-card"><div class="kpi-value">${dailyOrders}</div><div class="kpi-label"><span class="material-symbols-rounded" style="font-size:18px;">description</span> Daily Orders</div></div>
+        <div class="kpi-card"><div class="kpi-value">${dailyProductsSold}</div><div class="kpi-label"><span class="material-symbols-rounded" style="font-size:18px;">sell</span> Daily Products Sold</div></div>
+        <div class="kpi-card"><div class="kpi-value">${dailyStockAdded}</div><div class="kpi-label"><span class="material-symbols-rounded" style="font-size:18px;">add_circle</span> Daily Stock Added</div></div>
+        <div class="kpi-card"><div class="kpi-value">${dailyStockRemoved}</div><div class="kpi-label"><span class="material-symbols-rounded" style="font-size:18px;">remove_circle</span> Daily Stock Removed</div></div>
+
+        <div class="kpi-card"><div class="kpi-value" style="color:var(--md-error)">${lowStockCount}</div><div class="kpi-label"><span class="material-symbols-rounded" style="font-size:18px;">warning</span> Low Stock Products</div></div>
+        <div class="kpi-card"><div class="kpi-value" style="color:var(--md-error)">${outOfStockCount}</div><div class="kpi-label"><span class="material-symbols-rounded" style="font-size:18px;">error</span> Out of Stock</div></div>
+        <div class="kpi-card"><div class="kpi-value">${totalProductsAll}</div><div class="kpi-label"><span class="material-symbols-rounded" style="font-size:18px;">inventory_2</span> Total Products</div></div>
+        <div class="kpi-card"><div class="kpi-value">${totalSKUs}</div><div class="kpi-label"><span class="material-symbols-rounded" style="font-size:18px;">tag</span> Total SKUs</div></div>
+        <div class="kpi-card"><div class="kpi-value">${totalCategories}</div><div class="kpi-label"><span class="material-symbols-rounded" style="font-size:18px;">category</span> Total Categories</div></div>
+        <div class="kpi-card"><div class="kpi-value">${totalBrands}</div><div class="kpi-label"><span class="material-symbols-rounded" style="font-size:18px;">bookmark</span> Total Brands</div></div>
     </div>
+
     <div class="card"><div class="card-header"><h3>Recent Invoices</h3></div><div class="table-shell"><table><thead><tr><th>Invoice ID</th><th>Customer</th><th>Total</th><th>Status</th><th>Date</th></tr></thead><tbody>${recent.map(i=>`<tr><td><strong>${escapeHtml(i.id)}</strong></td><td>${escapeHtml(i.customer?.name||'—')}</td><td>${DB.fmtMoney(i.calculations?.grandTotal)}</td><td><span class="badge badge-${i.status==='paid'?'green':i.status==='issued'?'blue':i.status==='partial'?'amber':i.status==='draft'?'purple':'red'}">${escapeHtml(i.status)}</span></td><td data-date="${i.createdAt}">${DB.fmtDate(i.createdAt,true)}</td></tr>`).join('')||'<tr><td colspan="5">No invoices</td></tr>'}</tbody></table></div></div>`;
 }
 
@@ -1005,12 +1143,7 @@ function openProductForm(editId=null){
     });
     setTimeout(() => {
         const cancelBtn = document.querySelector('#modalPlace .cancel-modal');
-        if (cancelBtn) {
-            cancelBtn.addEventListener('click', () => {
-                window._currentProductPhoto = null;
-                window._productPhotoRemoved = false;
-            });
-        }
+        if (cancelBtn) cancelBtn.addEventListener('click', () => { window._currentProductPhoto = null; window._productPhotoRemoved = false; });
     }, 0);
     setTimeout(()=>{window._updateProductSuggestions();}, 0);
 }
@@ -1028,102 +1161,16 @@ function openInvoiceForm(editId=null){
     const logoPreview=DB._data.config.logo?`<div class="logo-preview"><img src="${DB._data.config.logo}" alt="Logo"><button type="button" class="btn btn-danger btn-sm" onclick="window._removeLogo()">Remove Logo</button></div>`:'<div class="logo-preview" style="color:var(--md-on-surface-variant);">No logo uploaded</div>';
     let initCustName=existing?.customer?.name||'',initCustPhone=existing?.customer?.phone||'',initCustEmail=existing?.customer?.email||'';let initCustAddress=existing?.customer?.address||'';let initNote=existing?.note||'';let initTerms=existing?.terms||'';const defaultDueDate = existing?.dueDate ? existing.dueDate.slice(0,10) : new Date(Date.now() + 30*24*60*60*1000).toISOString().slice(0,10);const termsChecked = existing?.termsApplied ? 'checked' : '';if(!initCustName&&existing?.customer?.customerId){const cust=DB._data.customers.find(c=>c.id===existing.customer.customerId);if(cust){initCustName=cust.personalInfo?.fullName||'';initCustPhone=cust.personalInfo?.phone||'';initCustEmail=cust.personalInfo?.email||'';const a=cust.personalInfo?.address;initCustAddress=a?[a.street,a.city,a.state,a.country,a.postalCode].filter(Boolean).join(', '):'';}}showModal(existing?'Edit Invoice':'Create Invoice',`<div class="form-grid-2"><div class="field"><label>Customer *</label><select name="customerId" required onchange="window._invoiceCustomerChanged(this.value)"><option value="">— Select —</option>${custOpts}</select></div><div class="field"><label>Seller</label><div style="display:flex;gap:4px;"><select name="sellerId" style="flex:1"><option value="">— None —</option>${empOpts}</select><button type="button" class="btn btn-sm btn-outlined" id="quickAddEmpBtn" title="Quick add employee"><span class="material-symbols-rounded">add</span></button></div></div><div class="field"><label>Payment Method</label><select name="paymentMethod"><option value="cash" ${existing?.payment?.method==='cash'?'selected':''}>Cash</option><option value="bank" ${existing?.payment?.method==='bank'?'selected':''}>Bank</option><option value="mobile" ${existing?.payment?.method==='mobile'?'selected':''}>Mobile</option><option value="card" ${existing?.payment?.method==='card'?'selected':''}>Card</option><option value="cod" ${existing?.payment?.method==='cod'?'selected':''}>COD</option></select></div><div class="field"><label>Paid Amount</label><input name="paidAmount" type="number" step="0.01" value="${existing?.payment?.paidAmount||0}"></div><div class="field"><label>Transaction ID</label><input name="transactionId" value="${escapeHtml(existing?.payment?.transactionId||'')}"></div><div class="field"><label>Status</label><select name="status"><option value="draft" ${existing?.status==='draft'?'selected':''}>Draft</option><option value="issued" ${existing?.status==='issued'?'selected':''}>Issued</option><option value="partial" ${existing?.status==='partial'?'selected':''}>Partial</option><option value="paid" ${existing?.status==='paid'?'selected':''}>Paid</option></select></div></div><div class="form-grid-2 mt-4"><div class="field"><label>Customer Name</label><input name="custName" value="${escapeHtml(initCustName)}"></div><div class="field"><label>Phone</label><input name="custPhone" value="${escapeHtml(initCustPhone)}"></div><div class="field"><label>Email</label><input name="custEmail" type="email" value="${escapeHtml(initCustEmail)}"></div></div><div class="field mt-4 mb-4"><label>Bill To / Address</label><textarea name="customerAddress" rows="3" placeholder="Auto-fills from customer, editable">${escapeHtml(initCustAddress)}</textarea></div><div class="field mt-4 mb-4"><label>Due Date</label><input type="date" name="dueDate" value="${defaultDueDate}"></div><div class="field mt-4 mb-4"><label>Promo Code</label><select name="promoCode" onchange="window._applyPromoToInvoice()"><option value="">— None —</option></select></div><div class="field mt-4 mb-4"><label>Note</label><textarea name="note" rows="2" placeholder="Any additional notes...">${escapeHtml(initNote)}</textarea></div><div class="field mt-4 mb-4"><label>Terms & Conditions</label><textarea name="terms" rows="3" placeholder="Custom terms and conditions...">${escapeHtml(initTerms)}</textarea></div><div class="field mt-4 mb-4"><label><input type="checkbox" name="termsApplied" ${termsChecked}> Apply Terms & Conditions</label></div><div class="field mt-4 mb-4"><label>Company Logo</label><input type="file" id="logoFileInput" accept="image/*" onchange="window._handleLogoUpload(this)">${logoPreview}</div><h4 class="mt-4">Items</h4><div id="invItemsContainer">${itemsHTML}</div><button type="button" class="btn btn-outlined btn-sm mt-4" id="addInvItemBtn"><span class="material-symbols-rounded">add</span> Add Item</button><div class="form-grid-2 mt-4"><div class="field"><label>Sub Total</label><input name="subTotal" type="number" step="0.01" value="${existing?.calculations?.subTotal||0}" readonly></div><div class="field"><label>Total Discount</label><input name="totalDiscount" type="number" step="0.01" value="${existing?.calculations?.totalDiscount||0}" readonly></div><div class="field"><label>Total Tax</label><input name="totalTax" type="number" step="0.01" value="${existing?.calculations?.totalTax||0}" readonly></div><div class="field"><label><strong>Grand Total</strong></label><input name="grandTotal" type="number" step="0.01" value="${existing?.calculations?.grandTotal||0}" readonly style="font-weight:700;font-size:1.1rem;"></div></div>`,(panel)=>{const customerId=panel.querySelector('[name="customerId"]').value;const customer=DB._data.customers.find(c=>c.id===customerId);const rows=panel.querySelectorAll('.inv-item-row');const newItems=[];rows.forEach((row,i)=>{const pid=row.querySelector(`[name="itemProduct_${i}"]`)?.value||'';const prod=DB._data.products.find(p=>p.id===pid);const sizeSelect = row.querySelector(`[name="itemSize_${i}"]`);const sizeOther = row.querySelector(`[name="itemSizeOther_${i}"]`);let size = sizeSelect ? sizeSelect.value : '';if (size === 'Others' && sizeOther) size = sizeOther.value.trim();else if (size === 'Others') size = '';newItems.push({productId:pid,name:prod?.basicInfo?.name||'',size,quantity:parseFloat(row.querySelector(`[name="itemQty_${i}"]`)?.value)||0,unitPrice:parseFloat(row.querySelector(`[name="itemPrice_${i}"]`)?.value)||0,discount:parseFloat(row.querySelector(`[name="itemDisc_${i}"]`)?.value)||0,taxRate:parseFloat(row.querySelector(`[name="itemTax_${i}"]`)?.value)||0,subtotal:parseFloat(row.querySelector(`[name="itemSub_${i}"]`)?.value)||0});});const subTotal=parseFloat(panel.querySelector('[name="subTotal"]')?.value)||0;const totalDiscount=parseFloat(panel.querySelector('[name="totalDiscount"]')?.value)||0;const totalTax=parseFloat(panel.querySelector('[name="totalTax"]')?.value)||0;let grandTotal=parseFloat(panel.querySelector('[name="grandTotal"]')?.value)||0;const paidAmount=parseFloat(panel.querySelector('[name="paidAmount"]')?.value)||0;const promoSel=panel.querySelector('[name="promoCode"]');const promoCode=promoSel?promoSel.value:'';let promoDiscount=0;let promo=null;if(promoCode){promo=DB._data.offers.find(o=>o.promoCode===promoCode&&o.status==='active');if(promo){const now=new Date();const start=promo.startDate?new Date(promo.startDate):null;const expiry=promo.expiryDate?new Date(promo.expiryDate):null;if((!start||now>=start)&&(!expiry||now<=expiry)){if(promo.type==='percentage'){promoDiscount=subTotal*(promo.value/100);}else{promoDiscount=Math.min(promo.value,subTotal);}grandTotal=subTotal-totalDiscount+totalTax-promoDiscount;if(grandTotal<0)grandTotal=0;}}}grandTotal = Math.round(grandTotal * 100) / 100;
 const dueAmount=Math.max(0,grandTotal-paidAmount);let paymentStatus='unpaid';if(paidAmount>=grandTotal&&grandTotal>0)paymentStatus='paid';else if(paidAmount>0)paymentStatus='partial';let invoiceStatus = panel.querySelector('[name="status"]').value;if (paidAmount >= grandTotal && grandTotal > 0 && invoiceStatus !== 'paid') { toast('⚠️ Paid amount covers the total, but status is not "paid". Consider changing to "paid".'); } else if (paidAmount > 0 && invoiceStatus === 'unpaid') { toast('⚠️ Partial payment recorded, status set to "partial" recommended.'); }const custNameField=panel.querySelector('[name="custName"]');const custPhoneField=panel.querySelector('[name="custPhone"]');const custEmailField=panel.querySelector('[name="custEmail"]');const addrField=panel.querySelector('[name="customerAddress"]');const noteField=panel.querySelector('[name="note"]');const termsField=panel.querySelector('[name="terms"]');const termsAppliedCheck=panel.querySelector('[name="termsApplied"]');const dueDateField=panel.querySelector('[name="dueDate"]');const sellerSelect=panel.querySelector('[name="sellerId"]');const sellerId=sellerSelect?.value||'';let seller=null;if(sellerId){if(existing && existing.seller && existing.seller.id===sellerId){seller=existing.seller;}else{const sellerEmp=DB._data.employees.find(e=>e.id===sellerId);if(sellerEmp)seller={id:sellerEmp.id,name:sellerEmp.personalInfo.fullName,role:sellerEmp.jobInfo?.role||'Employee'};}}const finalName=custNameField?custNameField.value.trim():(customer?.personalInfo?.fullName||'');const finalPhone=custPhoneField?custPhoneField.value.trim():(customer?.personalInfo?.phone||'');const finalEmail=custEmailField?custEmailField.value.trim():(customer?.personalInfo?.email||'');const finalAddress=addrField?addrField.value.trim():'';const finalNote=noteField?noteField.value.trim():'';const finalTerms=termsField?termsField.value.trim():'';const finalDueDate=dueDateField?new Date(dueDateField.value+'T00:00:00').toISOString():null;const termsApplied = termsAppliedCheck ? termsAppliedCheck.checked : false;const shouldDeduct=(invoiceStatus==='issued'||invoiceStatus==='paid');
-// Reverse previous stock deduction if any
-if (existing?.stockDeducted) {
-    existing.items.forEach(oldIt => {
-        const pIdx = DB._data.products.findIndex(p => p.id === oldIt.productId);
-        if (pIdx >= 0 && oldIt.quantity > 0) {
-            DB._data.products[pIdx].stock.available += oldIt.quantity;
-        }
-    });
-}
-// Apply new stock deduction if status requires it
-if (shouldDeduct) {
-    newItems.forEach(it => {
-        const pIdx = DB._data.products.findIndex(p => p.id === it.productId);
-        if (pIdx >= 0 && it.quantity > 0) {
-            DB._data.products[pIdx].stock.available = Math.max(0, DB._data.products[pIdx].stock.available - it.quantity);
-        }
-    });
-}
-const data={id:existing?.id||'INV-'+new Date().toISOString().slice(0,10).replace(/-/g,'')+'-'+Math.random().toString(36).substr(2,4).toUpperCase(),createdAt:existing?.createdAt||DB.now(),updatedAt:DB.now(),businessId:DB._data.config.company?.name,customer:{customerId,name:finalName,phone:finalPhone,email:finalEmail,address:finalAddress},seller,items:newItems,calculations:{subTotal,totalDiscount,totalTax,grandTotal},payment:{status:paymentStatus,method:panel.querySelector('[name="paymentMethod"]').value,paidAmount,dueAmount,transactionId:panel.querySelector('[name="transactionId"]').value},status:invoiceStatus,dueDate:finalDueDate,promo:promo?{code:promoCode,discountAmount:promoDiscount,promoId:promo.id}:null,note:finalNote,terms:finalTerms,termsApplied:termsApplied,stockDeducted:shouldDeduct};if(existing){const idx=DB._data.invoices.findIndex(i=>i.id===existing.id);if(idx>=0)DB._data.invoices[idx]=data;addAudit('update', `Invoice ${data.id} updated`);}else{DB._data.invoices.push(data);addAudit('create', `Invoice ${data.id} created`);}if(data.status==='issued'||data.status==='paid'){const existingSale=DB._data.sales.find(s=>s.invoiceId===data.id);const saleProfit=data.calculations.grandTotal-data.items.reduce((s,it)=>s+(DB._data.products.find(p=>p.id===it.productId)?.pricing?.costPrice||0)*it.quantity,0);const saleData={id:existingSale?.id||DB.uid('SALE'),invoiceId:data.id,customerId:data.customer.customerId,seller:data.seller,items:data.items.map(it=>({productId:it.productId,quantity:it.quantity,price:it.unitPrice})),totalAmount:data.calculations.grandTotal,profit:saleProfit,date:existingSale?.date||DB.now(),status:'completed'};if(existingSale){const sIdx=DB._data.sales.findIndex(s=>s.id===existingSale.id);if(sIdx>=0)DB._data.sales[sIdx]=saleData;}else{DB._data.sales.push(saleData);}const existingInc=DB._data.finance.income.find(i=>i.referenceId===data.id);const incData={id:existingInc?.id||DB.uid('INC'),source:'invoice',amount:data.payment.paidAmount||0,date:existingInc?.date||DB.now(),referenceId:data.id};if(existingInc){const iIdx=DB._data.finance.income.findIndex(i=>i.id===existingInc.id);if(iIdx>=0)DB._data.finance.income[iIdx]=incData;}else{DB._data.finance.income.push(incData);}const cust=DB._data.customers.find(c=>c.id===data.customer.customerId);if(cust){const prevInv=existing?DB._data.invoices.find(i=>i.id===existing.id):null;const oldGrand=prevInv?.calculations?.grandTotal||0;const oldPaid=prevInv?.payment?.paidAmount||0;cust.financialInfo.totalSpent=(cust.financialInfo.totalSpent||0)-oldGrand+data.calculations.grandTotal;cust.financialInfo.totalPaid=(cust.financialInfo.totalPaid||0)-oldPaid+data.payment.paidAmount;cust.financialInfo.totalDue=Math.max(0,cust.financialInfo.totalSpent-cust.financialInfo.totalPaid);cust.financialInfo.loyaltyPoints=Math.floor(cust.financialInfo.totalSpent);cust.updatedAt=DB.now();}}else{const saleToRemove=DB._data.sales.find(s=>s.invoiceId===data.id);if(saleToRemove)DB._data.sales=DB._data.sales.filter(s=>s.invoiceId!==data.id);const incToRemove=DB._data.finance.income.find(i=>i.referenceId===data.id);if(incToRemove)DB._data.finance.income=DB._data.finance.income.filter(i=>i.referenceId!==data.id);
-// Reverse customer totals if the previous invoice was counted (stockDeducted flag used as proxy)
-if (existing?.stockDeducted) {
-    const cust = DB._data.customers.find(c => c.id === data.customer.customerId);
-    if (cust) {
-        const oldGrand = existing.calculations?.grandTotal || 0;
-        const oldPaid = existing.payment?.paidAmount || 0;
-        cust.financialInfo.totalSpent = Math.max(0, (cust.financialInfo.totalSpent || 0) - oldGrand);
-        cust.financialInfo.totalPaid = Math.max(0, (cust.financialInfo.totalPaid || 0) - oldPaid);
-        cust.financialInfo.totalDue = Math.max(0, cust.financialInfo.totalSpent - cust.financialInfo.totalPaid);
-        cust.financialInfo.loyaltyPoints = Math.floor(cust.financialInfo.totalSpent);
-        cust.updatedAt = DB.now();
-    }
-}}DB.save();closeModal();navigate('invoices');toast('Invoice saved');updateAlertBadge();notifyLowStockAlerts();});setTimeout(()=>{document.getElementById('addInvItemBtn')?.addEventListener('click',()=>{window._addInvItemRow();window._refreshPromoSelect();});if(existing){const rows = document.querySelectorAll('.inv-item-row');rows.forEach((row, idx) => {const prodSelect = row.querySelector(`[name="itemProduct_${idx}"]`);if (prodSelect && prodSelect.value) {window._updateSizeSelect(idx);const existingSize = existing.items[idx]?.size || '';const sizeSelect = row.querySelector(`[name="itemSize_${idx}"]`);const sizeOther = row.querySelector(`[name="itemSizeOther_${idx}"]`);if (sizeSelect) {const options = Array.from(sizeSelect.options).map(o=>o.value);if (options.includes(existingSize)) {sizeSelect.value = existingSize;window._sizeSelectChanged(sizeSelect, idx);} else if (existingSize) {sizeSelect.value = 'Others';if (sizeOther) sizeOther.value = existingSize;window._sizeSelectChanged(sizeSelect, idx);}}}});} else {const firstRowProd = document.querySelector('[name="itemProduct_0"]');if (firstRowProd && firstRowProd.value) window._updateSizeSelect(0);}const quickAddBtn=document.getElementById('quickAddEmpBtn');quickAddBtn?.addEventListener('click',()=>{showModal2('Quick Add Employee',`<div class="field"><label>Full Name *</label><input name="empName" required></div><div class="field"><label>Role</label><select name="roleSelect" onchange="window._roleChanged(this)"><option value="Employee">Employee</option><option value="Salesperson">Salesperson</option><option value="Admin">Admin</option><option value="Manager">Manager</option><option value="__other__">Other…</option></select></div><div class="field" id="customRoleInput" style="display:none;"><label>Custom Role</label><input name="customRole" placeholder="Type role…"></div>`,(panel)=>{const name=panel.querySelector('[name="empName"]').value.trim();const role=window._getRoleValue(panel);if(!name)return toast('Name required');const newEmp={id:DB.uid('EMP'),personalInfo:{fullName:name,phone:'',email:'',address:'',NID:'',fatherName:'',motherName:''},jobInfo:{department:'',role,status:'active',salary:0,joinDate:null},attendance:[],payroll:[]};DB._data.employees.push(newEmp);addAudit('create', `Employee ${newEmp.id} created`);DB.save();closeModal2();const sellerSelect=document.querySelector('[name="sellerId"]');if(sellerSelect){const opt=document.createElement('option');opt.value=newEmp.id;opt.textContent=`${escapeHtml(newEmp.personalInfo.fullName)} (${escapeHtml(newEmp.jobInfo.role)})`;opt.selected=true;sellerSelect.appendChild(opt);}toast('Employee added');});});setTimeout(()=>{window._refreshPromoSelect();if(existing?.promo?.code){const sel=document.querySelector('[name="promoCode"]');if(sel)sel.value=existing.promo.code;window._applyPromoToInvoice();}},200);},100);}
-function deleteInvoice(id){if(confirm('Move invoice to trash?')){const inv = DB._data.invoices.find(i=>i.id===id); if(inv){
-    DB.reverseInvoiceStockDeduction(inv);
-    DB.reverseCustomerTotalsFromInvoice(inv);
-    const sale = DB._data.sales.find(s => s.invoiceId === id);
-    if (sale) {
-        DB.moveToTrash('sale', sale);
-        DB._data.sales = DB._data.sales.filter(s => s.invoiceId !== id);
-    }
-    const inc = DB._data.finance.income.find(i => i.referenceId === id);
-    if (inc) {
-        DB.moveToTrash('income', inc);
-        DB._data.finance.income = DB._data.finance.income.filter(i => i.referenceId !== id);
-    }
-    DB.moveToTrash('invoice', inv);
-    DB._data.invoices = DB._data.invoices.filter(i => i.id !== id);
-    DB.save();
-    navigate('invoices');
-    toast('Moved to trash');
-    updateAlertBadge();
-}}}
+if (existing?.stockDeducted) { existing.items.forEach(oldIt => { const pIdx = DB._data.products.findIndex(p => p.id === oldIt.productId); if (pIdx >= 0 && oldIt.quantity > 0) DB._data.products[pIdx].stock.available += oldIt.quantity; }); }
+if (shouldDeduct) { newItems.forEach(it => { const pIdx = DB._data.products.findIndex(p => p.id === it.productId); if (pIdx >= 0 && it.quantity > 0) DB._data.products[pIdx].stock.available = Math.max(0, DB._data.products[pIdx].stock.available - it.quantity); }); }
+const data={id:existing?.id||'INV-'+new Date().toISOString().slice(0,10).replace(/-/g,'')+'-'+Math.random().toString(36).substr(2,4).toUpperCase(),createdAt:existing?.createdAt||DB.now(),updatedAt:DB.now(),businessId:DB._data.config.company?.name,customer:{customerId,name:finalName,phone:finalPhone,email:finalEmail,address:finalAddress},seller,items:newItems,calculations:{subTotal,totalDiscount,totalTax,grandTotal},payment:{status:paymentStatus,method:panel.querySelector('[name="paymentMethod"]').value,paidAmount,dueAmount,transactionId:panel.querySelector('[name="transactionId"]').value},status:invoiceStatus,dueDate:finalDueDate,promo:promo?{code:promoCode,discountAmount:promoDiscount,promoId:promo.id}:null,note:finalNote,terms:finalTerms,termsApplied:termsApplied,stockDeducted:shouldDeduct};if(existing){const idx=DB._data.invoices.findIndex(i=>i.id===existing.id);if(idx>=0)DB._data.invoices[idx]=data;addAudit('update', `Invoice ${data.id} updated`);}else{DB._data.invoices.push(data);addAudit('create', `Invoice ${data.id} created`);}if(data.status==='issued'||data.status==='paid'){const existingSale=DB._data.sales.find(s=>s.invoiceId===data.id);const saleProfit=data.calculations.grandTotal-data.items.reduce((s,it)=>s+(DB._data.products.find(p=>p.id===it.productId)?.pricing?.costPrice||0)*it.quantity,0);const saleData={id:existingSale?.id||DB.uid('SALE'),invoiceId:data.id,customerId:data.customer.customerId,seller:data.seller,items:data.items.map(it=>({productId:it.productId,quantity:it.quantity,price:it.unitPrice})),totalAmount:data.calculations.grandTotal,profit:saleProfit,date:existingSale?.date||DB.now(),status:'completed'};if(existingSale){const sIdx=DB._data.sales.findIndex(s=>s.id===existingSale.id);if(sIdx>=0)DB._data.sales[sIdx]=saleData;}else{DB._data.sales.push(saleData);}const existingInc=DB._data.finance.income.find(i=>i.referenceId===data.id);const incData={id:existingInc?.id||DB.uid('INC'),source:'invoice',amount:data.payment.paidAmount||0,date:existingInc?.date||DB.now(),referenceId:data.id};if(existingInc){const iIdx=DB._data.finance.income.findIndex(i=>i.id===existingInc.id);if(iIdx>=0)DB._data.finance.income[iIdx]=incData;}else{DB._data.finance.income.push(incData);}const cust=DB._data.customers.find(c=>c.id===data.customer.customerId);if(cust){const prevInv=existing?DB._data.invoices.find(i=>i.id===existing.id):null;const oldGrand=prevInv?.calculations?.grandTotal||0;const oldPaid=prevInv?.payment?.paidAmount||0;cust.financialInfo.totalSpent=(cust.financialInfo.totalSpent||0)-oldGrand+data.calculations.grandTotal;cust.financialInfo.totalPaid=(cust.financialInfo.totalPaid||0)-oldPaid+data.payment.paidAmount;cust.financialInfo.totalDue=Math.max(0,cust.financialInfo.totalSpent-cust.financialInfo.totalPaid);cust.financialInfo.loyaltyPoints=Math.floor(cust.financialInfo.totalSpent);cust.updatedAt=DB.now();}}else{const saleToRemove=DB._data.sales.find(s=>s.invoiceId===data.id);if(saleToRemove)DB._data.sales=DB._data.sales.filter(s=>s.invoiceId!==data.id);const incToRemove=DB._data.finance.income.find(i=>i.referenceId===data.id);if(incToRemove)DB._data.finance.income=DB._data.finance.income.filter(i=>i.referenceId!==data.id);if (existing?.stockDeducted) { const cust = DB._data.customers.find(c => c.id === data.customer.customerId); if (cust) { const oldGrand = existing.calculations?.grandTotal || 0; const oldPaid = existing.payment?.paidAmount || 0; cust.financialInfo.totalSpent = Math.max(0, (cust.financialInfo.totalSpent || 0) - oldGrand); cust.financialInfo.totalPaid = Math.max(0, (cust.financialInfo.totalPaid || 0) - oldPaid); cust.financialInfo.totalDue = Math.max(0, cust.financialInfo.totalSpent - cust.financialInfo.totalPaid); cust.financialInfo.loyaltyPoints = Math.floor(cust.financialInfo.totalSpent); cust.updatedAt = DB.now(); }}}DB.save();closeModal();navigate('invoices');toast('Invoice saved');updateAlertBadge();notifyLowStockAlerts();});setTimeout(()=>{document.getElementById('addInvItemBtn')?.addEventListener('click',()=>{window._addInvItemRow();window._refreshPromoSelect();});if(existing){const rows = document.querySelectorAll('.inv-item-row');rows.forEach((row, idx) => {const prodSelect = row.querySelector(`[name="itemProduct_${idx}"]`);if (prodSelect && prodSelect.value) {window._updateSizeSelect(idx);const existingSize = existing.items[idx]?.size || '';const sizeSelect = row.querySelector(`[name="itemSize_${idx}"]`);const sizeOther = row.querySelector(`[name="itemSizeOther_${idx}"]`);if (sizeSelect) {const options = Array.from(sizeSelect.options).map(o=>o.value);if (options.includes(existingSize)) {sizeSelect.value = existingSize;window._sizeSelectChanged(sizeSelect, idx);} else if (existingSize) {sizeSelect.value = 'Others';if (sizeOther) sizeOther.value = existingSize;window._sizeSelectChanged(sizeSelect, idx);}}}});} else {const firstRowProd = document.querySelector('[name="itemProduct_0"]');if (firstRowProd && firstRowProd.value) window._updateSizeSelect(0);}const quickAddBtn=document.getElementById('quickAddEmpBtn');quickAddBtn?.addEventListener('click',()=>{showModal2('Quick Add Employee',`<div class="field"><label>Full Name *</label><input name="empName" required></div><div class="field"><label>Role</label><select name="roleSelect" onchange="window._roleChanged(this)"><option value="Employee">Employee</option><option value="Salesperson">Salesperson</option><option value="Admin">Admin</option><option value="Manager">Manager</option><option value="__other__">Other…</option></select></div><div class="field" id="customRoleInput" style="display:none;"><label>Custom Role</label><input name="customRole" placeholder="Type role…"></div>`,(panel)=>{const name=panel.querySelector('[name="empName"]').value.trim();const role=window._getRoleValue(panel);if(!name)return toast('Name required');const newEmp={id:DB.uid('EMP'),personalInfo:{fullName:name,phone:'',email:'',address:'',NID:'',fatherName:'',motherName:''},jobInfo:{department:'',role,status:'active',salary:0,joinDate:null},attendance:[],payroll:[]};DB._data.employees.push(newEmp);addAudit('create', `Employee ${newEmp.id} created`);DB.save();closeModal2();const sellerSelect=document.querySelector('[name="sellerId"]');if(sellerSelect){const opt=document.createElement('option');opt.value=newEmp.id;opt.textContent=`${escapeHtml(newEmp.personalInfo.fullName)} (${escapeHtml(newEmp.jobInfo.role)})`;opt.selected=true;sellerSelect.appendChild(opt);}toast('Employee added');});});setTimeout(()=>{window._refreshPromoSelect();if(existing?.promo?.code){const sel=document.querySelector('[name="promoCode"]');if(sel)sel.value=existing.promo.code;window._applyPromoToInvoice();}},200);},100);}
+function deleteInvoice(id){if(confirm('Move invoice to trash?')){const inv = DB._data.invoices.find(i=>i.id===id); if(inv){ DB.reverseInvoiceStockDeduction(inv); DB.reverseCustomerTotalsFromInvoice(inv); const sale = DB._data.sales.find(s => s.invoiceId === id); if (sale) { DB.moveToTrash('sale', sale); DB._data.sales = DB._data.sales.filter(s => s.invoiceId !== id); } const inc = DB._data.finance.income.find(i => i.referenceId === id); if (inc) { DB.moveToTrash('income', inc); DB._data.finance.income = DB._data.finance.income.filter(i => i.referenceId !== id); } DB.moveToTrash('invoice', inv); DB._data.invoices = DB._data.invoices.filter(i => i.id !== id); DB.save(); navigate('invoices'); toast('Moved to trash'); updateAlertBadge(); }}}
 function printInvoice(id){if(typeof QRCode==='undefined'){toast('QR library not loaded');return;}const inv=DB._data.invoices.find(i=>i.id===id);if(!inv)return toast('Not found');const companyName = getActiveProfileName();const company = DB._data.config.company;const invDate=new Date(inv.createdAt).toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'})+', '+new Date(inv.createdAt).toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});const dueDate=inv.dueDate?DB.fmtDate(inv.dueDate):DB.fmtDate(new Date(new Date(inv.createdAt).getTime()+30*24*60*60*1000));let itemsHtml='';inv.items.forEach(it=>{const lineTotal=(it.quantity*it.unitPrice)-it.discount+((it.quantity*it.unitPrice-it.discount)*(it.taxRate/100));itemsHtml+=`<tr><td>${escapeHtml(it.productId)}</td><td>${escapeHtml(it.name||'—')}</td><td>${escapeHtml(it.size||'—')}</td><td>${it.quantity}</td><td>${DB.fmtMoney(it.unitPrice)}</td><td>${DB.fmtMoney(it.discount)}</td><td>${it.taxRate}%</td><td>${DB.fmtMoney(lineTotal)}</td></tr>`;});const logoImg=DB._data.config.logo?`<img src="${DB._data.config.logo}" style="max-width:120px; max-height:70px; margin-bottom:8px;">`:'';const getAddress=()=>{if(inv.customer?.address)return escapeHtml(inv.customer.address);const cust=DB._data.customers.find(c=>c.id===inv.customer?.customerId);if(cust?.personalInfo?.address){const a=cust.personalInfo.address;return escapeHtml([a.street,a.city,a.state,a.country,a.postalCode].filter(Boolean).join(', '));}return'';};const billToFields=[escapeHtml(inv.customer?.name||'N/A'),getAddress(),escapeHtml(inv.customer?.phone),escapeHtml(inv.customer?.email)].filter(Boolean);const billToHtml=billToFields.length?billToFields.join('<br>'):'N/A';const txnLine=inv.payment?.transactionId?` | <strong>Transaction ID:</strong> ${escapeHtml(inv.payment.transactionId)}`:'';const sellerLine=inv.seller?.name?`<p class="seller-line"><strong>Sold by:</strong> ${escapeHtml(inv.seller.name)}</p>`:'';const preparedBy=inv.seller?`<p class="seller-line"><strong>Prepared by:</strong> ${escapeHtml(inv.seller.name)} (${escapeHtml(inv.seller.role||'Employee')})</p>`:'';const noteHtml=inv.note?`<div class="note"><strong>Note:</strong><br>${escapeHtml(inv.note).replace(/\n/g,'<br>')}</div>`:'';const termsHtml=inv.terms?`<div class="terms"><h3>Terms & Conditions</h3><p>${escapeHtml(inv.terms).replace(/\n/g,'<br>')}</p></div>`:'';const termsAppliedHtml=inv.termsApplied?`<p><strong>Terms & Conditions Applied</strong></p>`:'';let promoHtml='';if(inv.promo&&inv.promo.discountAmount>0){promoHtml=`<div class="promo-info"><p><strong>Promo Applied:</strong> ${escapeHtml(inv.promo.code)} - Discount: ${DB.fmtMoney(inv.promo.discountAmount)}</p></div>`;}const qrContainer=document.createElement('div');qrContainer.style.position='absolute';qrContainer.style.left='-9999px';document.body.appendChild(qrContainer);new QRCode(qrContainer,{text:JSON.stringify({id:inv.id,total:inv.calculations?.grandTotal}),width:100,height:100,colorDark:"#1C1B1F",colorLight:"#ffffff",correctLevel:QRCode.CorrectLevel.M});const qrCanvas=qrContainer.querySelector('canvas');const qrDataURL=qrCanvas?qrCanvas.toDataURL():'';document.body.removeChild(qrContainer);const qrHtml=qrDataURL?`<div style="margin-top:12px;"><img src="${qrDataURL}" width="80" height="80" style="border:1px solid #ddd;" alt="QR Code"></div>`:'';const w=window.open('','_blank','width=860,height=700');w.document.write(`<!DOCTYPE html><html><head><title>Invoice ${escapeHtml(inv.id)}</title><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"><style>body{font-family:Helvetica,Arial,sans-serif;color:#333;margin:0;padding:0;}.invoice-box{max-width:800px;margin:20px auto;padding:30px;border:1px solid #eee;box-shadow:0 0 10px rgba(0,0,0,0.05);font-size:16px;line-height:24px;color:#555;position:relative;}.header{display:flex;justify-content:space-between;}.company-info h2{margin:0 0 5px;font-size:24px;color:#111;}.invoice-title{text-align:right;}.invoice-title h1{margin:0;font-size:28px;color:#111;font-weight:bold;}.invoice-title p{font-weight:bold;}.invoice-details{margin-top:20px;display:flex;justify-content:space-between;}.bill-to,.details{width:48%;}h3{margin-top:0;font-size:16px;color:#111;border-bottom:1px solid #ddd;padding-bottom:5px;}table{width:100%;margin-top:20px;border-collapse:collapse;}th,td{border-bottom:1px solid #ddd;padding:10px 0;text-align:left;font-size:14px;}th{color:#111;}.totals{margin-top:20px;display:flex;justify-content:flex-end;}.totals table{width:300px;}.totals td{padding:5px 10px;text-align:right;}.totals td:first-child{text-align:left;font-weight:bold;}.grand-total{font-size:18px;font-weight:bold;color:#111;}.payment-info{margin-top:30px;font-size:14px;}.seller-line{margin-top:10px;font-size:14px;}.note,.terms,.promo-info{margin-top:20px;padding:10px;border:1px dashed #ccc;background:#f9f9f9;border-radius:4px;font-size:14px;line-height:1.4;}.footer{margin-top:50px;text-align:center;color:#999;font-size:16px;font-weight:bold;padding-top:20px;border-top:1px solid #ddd;}@media print{body{margin:0;}.invoice-box{box-shadow:none;border:none;padding:0;max-width:100%;}.no-print{display:none;}}.no-print{text-align:right;margin-bottom:20px;}.no-print button{padding:8px 16px;cursor:pointer;}</style></head><body><div class="no-print"><button onclick="window.print()"><span class="material-symbols-rounded">print</span> Print</button> <button onclick="window.close()">Close</button></div><div class="invoice-box"><div class="header"><div class="company-info">${logoImg}<h2>${escapeHtml(companyName)}</h2><p>${escapeHtml(company.address)}<br>Phone: ${escapeHtml(company.phone)}</p></div><div class="invoice-title"><h1>INVOICE</h1><p><strong>#${escapeHtml(inv.id)}</strong></p>${qrHtml}</div></div><div class="invoice-details"><div class="bill-to"><h3>Bill To:</h3><p>${billToHtml}</p></div><div class="details"><h3>Invoice Details:</h3><p><strong>Invoice Date:</strong> ${invDate}<br><strong>Due Date:</strong> ${dueDate}<br><strong>Status:</strong> ${escapeHtml(inv.status)}</p></div></div>${sellerLine}<table><thead><tr><th>Product ID</th><th>Description</th><th>Size</th><th>Qty</th><th>Unit Price</th><th>Discount</th><th>Tax</th><th>Line Total</th></tr></thead><tbody>${itemsHtml}</tbody></table><div class="totals"><table><tr><td>Subtotal</td><td>${DB.fmtMoney(inv.calculations.subTotal)}</td></tr><tr><td>Total Discount</td><td>${DB.fmtMoney(inv.calculations.totalDiscount)}</td></tr><tr><td>Total Tax</td><td>${DB.fmtMoney(inv.calculations.totalTax)}</td></tr>${inv.promo&&inv.promo.discountAmount>0?`<tr><td>Promo Discount</td><td>-${DB.fmtMoney(inv.promo.discountAmount)}</td></tr>`:''}<tr class="grand-total"><td>Grand Total</td><td>${DB.fmtMoney(inv.calculations.grandTotal)}</td></tr></table></div><div class="payment-info"><p><strong>Payment Status:</strong> ${escapeHtml(inv.payment.status)} | <strong>Method:</strong> ${escapeHtml(inv.payment.method)} | <strong>Paid:</strong> ${DB.fmtMoney(inv.payment.paidAmount)} | <strong>Due:</strong> ${DB.fmtMoney(inv.payment.dueAmount)}${txnLine}</p></div>${termsAppliedHtml}${promoHtml}${noteHtml}${termsHtml}${preparedBy}<div class="footer"><p>Thank You</p></div></div></body></html>`);w.document.close();w.focus();}
 window._refreshPromoSelect = function(){const sel = document.querySelector('[name="promoCode"]');if(!sel) return;const productIds = new Set();document.querySelectorAll('.inv-item-row select[name^="itemProduct_"]').forEach(s=>{ if(s.value) productIds.add(s.value); });const activePromos = DB._data.offers.filter(o=>o.status==='active');const filtered = productIds.size>0 ? activePromos.filter(o=> !o.productId || productIds.has(o.productId) ) : activePromos;const currentVal = sel.value;sel.innerHTML = '<option value="">— None —</option>';filtered.forEach(o=>{const opt = document.createElement('option');opt.value = o.promoCode;opt.textContent = `${o.promoCode} (${o.type==='percentage'?o.value+'%':DB.fmtMoney(o.value)}${o.productId?' - '+DB._data.products.find(p=>p.id===o.productId)?.basicInfo.name:' - All'})`;sel.appendChild(opt);});if(currentVal && [...sel.options].some(o=>o.value===currentVal)) sel.value = currentVal; else sel.value = '';};
 window._applyPromoToInvoice = function(){ window._recalcInvTotals(); };
-window._updateSizeSelect = function(idx){
-    const prodSelect = document.querySelector(`[name="itemProduct_${idx}"]`);
-    const sizeSelect = document.querySelector(`[name="itemSize_${idx}"]`);
-    const sizeOther = document.querySelector(`[name="itemSizeOther_${idx}"]`);
-    if (!sizeSelect) return;
-    sizeSelect.innerHTML = '<option value="">-- Select --</option>';
-    if (sizeOther) sizeOther.style.display = 'none';
-    if (prodSelect && prodSelect.selectedOptions.length) {
-        const sizeStr = prodSelect.selectedOptions[0].dataset.size || '';
-        const sizes = sizeStr.split(',').map(s => s.trim()).filter(s => s.length > 0);
-        sizes.forEach(s => {
-            const opt = document.createElement('option');
-            opt.value = s;
-            opt.textContent = s;
-            sizeSelect.appendChild(opt);
-        });
-        const othersOpt = document.createElement('option');
-        othersOpt.value = 'Others';
-        othersOpt.textContent = 'Others (custom)';
-        sizeSelect.appendChild(othersOpt);
-    }
-};
-window._sizeSelectChanged = function(selectEl, idx){
-    const sizeOther = document.querySelector(`[name="itemSizeOther_${idx}"]`);
-    if (!sizeOther) return;
-    if (selectEl.value === 'Others') {
-        sizeOther.style.display = 'block';
-    } else {
-        sizeOther.style.display = 'none';
-        sizeOther.value = '';
-    }
-};
-window._invItemProductChanged = function(idx){
-    window._updateSizeSelect(idx);
-    const sel = document.querySelector(`[name="itemProduct_${idx}"]`);if(!sel?.value) return;
-    const opt = sel.selectedOptions[0];const price = parseFloat(opt.dataset.price)||0;const tax = parseFloat(opt.dataset.tax)||0;
-    document.querySelector(`[name="itemPrice_${idx}"]`).value = price;
-    document.querySelector(`[name="itemTax_${idx}"]`).value = tax;
-    window._recalcInvItem(idx);
-    window._refreshPromoSelect();
-};
+window._updateSizeSelect = function(idx){ const prodSelect = document.querySelector(`[name="itemProduct_${idx}"]`); const sizeSelect = document.querySelector(`[name="itemSize_${idx}"]`); const sizeOther = document.querySelector(`[name="itemSizeOther_${idx}"]`); if (!sizeSelect) return; sizeSelect.innerHTML = '<option value="">-- Select --</option>'; if (sizeOther) sizeOther.style.display = 'none'; if (prodSelect && prodSelect.selectedOptions.length) { const sizeStr = prodSelect.selectedOptions[0].dataset.size || ''; const sizes = sizeStr.split(',').map(s => s.trim()).filter(s => s.length > 0); sizes.forEach(s => { const opt = document.createElement('option'); opt.value = s; opt.textContent = s; sizeSelect.appendChild(opt); }); const othersOpt = document.createElement('option'); othersOpt.value = 'Others'; othersOpt.textContent = 'Others (custom)'; sizeSelect.appendChild(othersOpt); } };
+window._sizeSelectChanged = function(selectEl, idx){ const sizeOther = document.querySelector(`[name="itemSizeOther_${idx}"]`); if (!sizeOther) return; if (selectEl.value === 'Others') { sizeOther.style.display = 'block'; } else { sizeOther.style.display = 'none'; sizeOther.value = ''; } };
+window._invItemProductChanged = function(idx){ window._updateSizeSelect(idx); const sel = document.querySelector(`[name="itemProduct_${idx}"]`);if(!sel?.value) return; const opt = sel.selectedOptions[0];const price = parseFloat(opt.dataset.price)||0;const tax = parseFloat(opt.dataset.tax)||0; document.querySelector(`[name="itemPrice_${idx}"]`).value = price; document.querySelector(`[name="itemTax_${idx}"]`).value = tax; window._recalcInvItem(idx); window._refreshPromoSelect(); };
 window._addInvItemRow = function(){const container = document.getElementById('invItemsContainer');if(!container) return;const idx = container.querySelectorAll('.inv-item-row').length;const prodOpts = DB._data.products.filter(p=>p.status==='active').map(p=>`<option value="${p.id}" data-price="${p.pricing.salePrice}" data-tax="${p.pricing.taxRate}" data-stock="${p.stock?.available||0}" data-reorder="${p.stock?.reorderLevel||10}" data-size="${escapeHtml(p.basicInfo?.size||'')}">${escapeHtml(p.basicInfo.name)} (Stock: ${p.stock?.available||0} – ${DB.fmtMoney(p.pricing.salePrice)})</option>`).join('');const row = document.createElement('div');row.className = 'form-grid-2 inv-item-row mb-4';row.style.cssText = 'border:1px solid var(--md-outline-variant);padding:10px;border-radius:8px;';row.innerHTML = `<div class="field"><label>Product</label><select name="itemProduct_${idx}" onchange="window._invItemProductChanged(${idx})"><option value="">— Select —</option>${prodOpts}</select></div><div class="field"><label>Size</label><select name="itemSize_${idx}" class="size-select" onchange="window._sizeSelectChanged(this,${idx})"><option value="">-- Select --</option></select><input type="text" name="itemSizeOther_${idx}" class="size-other-input" style="display:none; margin-top:4px;" placeholder="Enter custom size"></div><div class="field"><label>Qty</label><input name="itemQty_${idx}" type="number" value="1" onchange="window._recalcInvItem(${idx})"></div><div class="field"><label>Unit Price</label><input name="itemPrice_${idx}" type="number" step="0.01" value="0" onchange="window._recalcInvItem(${idx})"></div><div class="field"><label>Discount</label><input name="itemDisc_${idx}" type="number" step="0.01" value="0" onchange="window._recalcInvItem(${idx})"></div><div class="field"><label>Tax Rate %</label><input name="itemTax_${idx}" type="number" step="0.01" value="0" onchange="window._recalcInvItem(${idx})"></div><div class="field"><label>Subtotal</label><input name="itemSub_${idx}" type="number" step="0.01" value="0" readonly></div><div class="field" style="color:var(--md-on-surface-variant);font-size:0.75rem;" id="stockWarn_${idx}"></div><button type="button" class="btn btn-danger btn-sm" onclick="this.closest('.inv-item-row').remove();window._recalcInvTotals();window._refreshPromoSelect()"><span class="material-symbols-rounded">close</span></button>`;container.appendChild(row);window._refreshPromoSelect();};
 window._recalcInvItem = function(idx){const qty = parseFloat(document.querySelector(`[name="itemQty_${idx}"]`)?.value)||0;const price = parseFloat(document.querySelector(`[name="itemPrice_${idx}"]`)?.value)||0;const disc = parseFloat(document.querySelector(`[name="itemDisc_${idx}"]`)?.value)||0;const tax = parseFloat(document.querySelector(`[name="itemTax_${idx}"]`)?.value)||0;const line = qty*price, afterDisc = line-disc, taxAmt = afterDisc*(tax/100), sub = afterDisc+taxAmt;document.querySelector(`[name="itemSub_${idx}"]`).value = sub.toFixed(2);window._recalcInvTotals();};
 window._recalcInvTotals = function(){let subTotal=0,totalDisc=0,totalTax=0;document.querySelectorAll('.inv-item-row').forEach((row,i)=>{const qty = parseFloat(row.querySelector(`[name="itemQty_${i}"]`)?.value)||0;const price = parseFloat(row.querySelector(`[name="itemPrice_${i}"]`)?.value)||0;const disc = parseFloat(row.querySelector(`[name="itemDisc_${i}"]`)?.value)||0;const tax = parseFloat(row.querySelector(`[name="itemTax_${i}"]`)?.value)||0;const line = qty*price;subTotal+=line; totalDisc+=disc; totalTax+=(line-disc)*(tax/100);});let grand = subTotal-totalDisc+totalTax;const promoSel = document.querySelector('[name="promoCode"]');if(promoSel && promoSel.value){const promo = DB._data.offers.find(o=>o.promoCode===promoSel.value&&o.status==='active');if(promo){const now = new Date();const start = promo.startDate?new Date(promo.startDate):null;const expiry = promo.expiryDate?new Date(promo.expiryDate):null;if((!start||now>=start) && (!expiry||now<=expiry)){let applyPromo = true;if (promo.productId) {const productIds = [];document.querySelectorAll('.inv-item-row select[name^="itemProduct_"]').forEach(sel => { if (sel.value) productIds.push(sel.value); });if (!productIds.includes(promo.productId)) applyPromo = false;}if (applyPromo) {let discount = 0;if(promo.type==='percentage') discount = subTotal*(promo.value/100);else discount = Math.min(promo.value, subTotal);grand -= discount;if(grand<0) grand=0;}}}}document.querySelector('[name="subTotal"]').value = subTotal.toFixed(2);document.querySelector('[name="totalDiscount"]').value = totalDisc.toFixed(2);document.querySelector('[name="totalTax"]').value = totalTax.toFixed(2);document.querySelector('[name="grandTotal"]').value = grand.toFixed(2);};
@@ -1131,15 +1178,7 @@ window._recalcInvTotals = function(){let subTotal=0,totalDisc=0,totalTax=0;docum
 // ==================== PURCHASES ====================
 function renderPurchases(){const list=DB._data.purchases;return`<div class="card"><div class="card-header" id="purchCardHeader"><h3>Purchases (${list.length})</h3><button class="btn btn-filled" id="addPurchBtn"><span class="material-symbols-rounded">add</span> Add</button></div><div class="table-shell"><table id="purchTbl"><thead><tr><th>ID</th><th>Supplier</th><th>Items</th><th onclick="sortTable('purchTbl',3,true)">Total</th><th onclick="sortTable('purchTbl',4)">Date</th><th>Status</th><th>Payment Method</th><th>Transaction ID</th><th></th></tr></thead><tbody>${list.map(p=>{const sup=DB._data.suppliers.find(s=>s.id===p.supplierId);return`<tr><td>${escapeHtml(p.id)}</td><td>${escapeHtml(sup?.name||p.supplierId)}</td><td>${p.items?.length}</td><td>${DB.fmtMoney(p.totalCost)}</td><td data-date="${p.date}">${DB.fmtDate(p.date,true)}</td><td><span class="badge badge-${p.status==='completed'?'green':'amber'}">${p.status}</span></td><td>${escapeHtml(p.paymentMethod||'—')}</td><td>${escapeHtml(p.transactionId||'—')}</td><td><button class="btn btn-tonal btn-sm edit-purch" data-id="${p.id}" title="Edit"><span class="material-symbols-rounded">edit</span></button> <button class="btn btn-outlined btn-sm print-purch" data-id="${p.id}" title="Print"><span class="material-symbols-rounded">print</span></button> <button class="btn btn-danger btn-sm del-purch" data-id="${p.id}" title="Delete"><span class="material-symbols-rounded">delete</span></button></td></tr>`}).join('')||'<tr><td colspan="9">No purchases</td></tr>'}</tbody></table></div></div>`;}
 function openPurchaseForm(editId=null){const existing=editId?DB._data.purchases.find(p=>p.id===editId):null;const suppOpts=DB._data.suppliers.map(s=>`<option value="${s.id}" ${existing?.supplierId===s.id?'selected':''}>${escapeHtml(s.name)}</option>`).join('');const prodOpts=DB._data.products.map(p=>`<option value="${p.id}" data-cost="${p.pricing?.costPrice||0}" data-size="${p.basicInfo?.size||''}">${escapeHtml(p.basicInfo.name)}</option>`).join('');const pitems=existing?.items||[{productId:'',quantity:1,costPrice:0,size:'',notes:''}];const itemsHTML=pitems.map((it,idx)=>`<div class="form-grid-2 purch-item-row mb-4" style="border:1px solid var(--md-outline-variant);padding:10px;border-radius:8px;"><div class="field"><label>Product</label><select name="pItemProd_${idx}"><option value="">— Select —</option>${prodOpts.replace(new RegExp(`value="${it.productId}"`),`value="${it.productId}" selected`)}</select></div><div class="field"><label>Size</label><input list="pSizeList_${idx}" name="pItemSize_${idx}" value="${escapeHtml(it.size||'')}" onfocus="window._updatePurchSizeDatalist(${idx})"><datalist id="pSizeList_${idx}"></datalist></div><div class="field"><label>Qty</label><input name="pItemQty_${idx}" type="number" value="${it.quantity}"></div><div class="field"><label>Cost</label><input name="pItemCost_${idx}" type="number" step="0.01" value="${it.costPrice}"></div><div class="field"><label>Notes</label><input name="pItemNotes_${idx}" value="${escapeHtml(it.notes||'')}"></div><button type="button" class="btn btn-danger btn-sm" onclick="this.closest('.purch-item-row').remove()"><span class="material-symbols-rounded">close</span></button></div>`).join('');showModal(existing?'Edit Purchase':'New Purchase',`<div class="field mb-4"><label>Supplier *</label><select name="supplierId" required><option value="">— Select —</option>${suppOpts}</select></div><h4>Items</h4><div id="purchItems">${itemsHTML}</div><button type="button" class="btn btn-outlined btn-sm mt-4" id="addPurchItemBtn"><span class="material-symbols-rounded">add</span> Add Item</button><div class="form-grid-2 mt-4"><div class="field"><label>Payment Method</label><select name="paymentMethod"><option value="cash" ${existing?.paymentMethod==='cash'?'selected':''}>Cash</option><option value="bank" ${existing?.paymentMethod==='bank'?'selected':''}>Bank</option><option value="card" ${existing?.paymentMethod==='card'?'selected':''}>Card</option></select></div><div class="field"><label>Transaction ID</label><input name="transactionId" value="${escapeHtml(existing?.transactionId||'')}"></div></div><div class="field mt-4"><label>Total Cost</label><input name="totalCost" type="number" step="0.01" value="${existing?.totalCost||0}" readonly></div><div class="field"><label>Status</label><select name="status"><option value="pending" ${existing?.status==='pending'?'selected':''}>Pending</option><option value="completed" ${existing?.status==='completed'?'selected':''}>Completed</option></select></div>`,(panel)=>{const supplierId=panel.querySelector('[name="supplierId"]').value;const rows=panel.querySelectorAll('.purch-item-row');const items=[];let totalCost=0;rows.forEach((row,i)=>{let pid=row.querySelector(`[name="pItemProd_${i}"]`)?.value||'';const qty=parseFloat(row.querySelector(`[name="pItemQty_${i}"]`)?.value)||0;const cost=parseFloat(row.querySelector(`[name="pItemCost_${i}"]`)?.value)||0;const size=row.querySelector(`[name="pItemSize_${i}"]`)?.value||'';const notes=row.querySelector(`[name="pItemNotes_${i}"]`)?.value||'';if(pid&&!DB._data.products.find(p=>p.id===pid)){const newProd={id:pid,sku:'SKU-'+pid,basicInfo:{name:pid},pricing:{costPrice:cost,salePrice:cost*1.2,taxRate:0,discount:0},stock:{quantity:0,reserved:0,available:0,reorderLevel:10},status:'active',createdAt:DB.now()};DB._data.products.push(newProd);addAudit('create', `Product ${pid} auto-created during purchase`);}items.push({productId:pid,quantity:qty,costPrice:cost,size,notes});totalCost+=qty*cost;});const status=panel.querySelector('[name="status"]').value;const paymentMethod=panel.querySelector('[name="paymentMethod"]').value;const transactionId=panel.querySelector('[name="transactionId"]').value;const data={id:existing?.id||DB.uid('PURCH'),supplierId,items,totalCost,date:existing?.date||DB.now(),status,paymentMethod,transactionId};if(existing){const prevStatus=existing.status;const idx=DB._data.purchases.findIndex(p=>p.id===existing.id);if(idx>=0)DB._data.purchases[idx]=data;addAudit('update', `Purchase ${data.id} updated`);if(prevStatus==='completed'){existing.items.forEach(it=>{const pIdx=DB._data.products.findIndex(p=>p.id===it.productId);if(pIdx>=0){DB._data.products[pIdx].stock.quantity -= it.quantity;DB._data.products[pIdx].stock.available -= it.quantity;}});}}else{DB._data.purchases.push(data);addAudit('create', `Purchase ${data.id} created`);}if(status==='completed'){items.forEach(it=>{const pIdx=DB._data.products.findIndex(p=>p.id===it.productId);if(pIdx>=0){DB._data.products[pIdx].stock.quantity += it.quantity;DB._data.products[pIdx].stock.available += it.quantity;}});DB._data.finance.expenses.push({id:DB.uid('EXP'),category:'Purchase',amount:totalCost,date:DB.now(),note:'Purchase '+data.id});}DB.save();closeModal();navigate('purchases');toast('Saved');updateAlertBadge();notifyLowStockAlerts();});setTimeout(()=>{document.getElementById('addPurchItemBtn')?.addEventListener('click',()=>{const container=document.getElementById('purchItems');const idx=container.querySelectorAll('.purch-item-row').length;const row=document.createElement('div');row.className='form-grid-2 purch-item-row mb-4';row.style.cssText='border:1px solid var(--md-outline-variant);padding:10px;border-radius:8px;';row.innerHTML=`<div class="field"><label>Product</label><select name="pItemProd_${idx}"><option value="">— Select —</option>${prodOpts}</select></div><div class="field"><label>Size</label><input list="pSizeList_${idx}" name="pItemSize_${idx}" onfocus="window._updatePurchSizeDatalist(${idx})"><datalist id="pSizeList_${idx}"></datalist></div><div class="field"><label>Qty</label><input name="pItemQty_${idx}" type="number" value="1"></div><div class="field"><label>Cost</label><input name="pItemCost_${idx}" type="number" step="0.01" value="0"></div><div class="field"><label>Notes</label><input name="pItemNotes_${idx}"></div><button type="button" class="btn btn-danger btn-sm" onclick="this.closest('.purch-item-row').remove()"><span class="material-symbols-rounded">close</span></button>`;container.appendChild(row);});},100);}
-function deletePurchase(id){if(confirm('Move purchase to trash?')){const purch = DB._data.purchases.find(p=>p.id===id); if(purch){
-    DB.reversePurchaseStock(purch);
-    DB.moveToTrash('purchase', purch);
-    DB._data.purchases = DB._data.purchases.filter(p=>p.id!==id);
-    DB.save();
-    navigate('purchases');
-    toast('Moved to trash');
-    updateAlertBadge();
-}}}
+function deletePurchase(id){if(confirm('Move purchase to trash?')){const purch = DB._data.purchases.find(p=>p.id===id); if(purch){ DB.reversePurchaseStock(purch); DB.moveToTrash('purchase', purch); DB._data.purchases = DB._data.purchases.filter(p=>p.id!==id); DB.save(); navigate('purchases'); toast('Moved to trash'); updateAlertBadge(); }}}
 window._updatePurchSizeDatalist = function(idx){const sel = document.querySelector(`[name="pItemProd_${idx}"]`);if(!sel?.value) return;const opt = sel.selectedOptions[0];const sizes = opt.dataset.size||'';const datalist = document.getElementById(`pSizeList_${idx}`);if(datalist){datalist.innerHTML = ''; if(sizes){sizes.split(',').forEach(s=>{const option = document.createElement('option');option.value = s.trim();datalist.appendChild(option);});}}};
 function printPurchase(id){const pur=DB._data.purchases.find(p=>p.id===id);if(!pur)return toast('Not found');const supplier=DB._data.suppliers.find(s=>s.id===pur.supplierId);const companyName = getActiveProfileName();const company = DB._data.config.company;let itemsHtml='';pur.items.forEach(it=>{const prod=DB._data.products.find(p=>p.id===it.productId);itemsHtml+=`<tr><td>${escapeHtml(it.productId)}</td><td>${escapeHtml(prod?.basicInfo?.name||'')}</td><td>${escapeHtml(it.size||'')}</td><td>${it.quantity}</td><td>${DB.fmtMoney(it.costPrice)}</td><td>${DB.fmtMoney(it.quantity*it.costPrice)}</td></tr>`;});const html=`<!DOCTYPE html><html><head><style>body{font-family:Arial;margin:40px;}h1{font-size:24px;}table{width:100%;border-collapse:collapse;margin:20px 0;}th,td{border:1px solid #000;padding:8px;text-align:left;}.totals{text-align:right;margin-top:20px;}.footer{margin-top:40px;text-align:center;}</style></head><body><h1>Purchase Order</h1><p><strong>From:</strong> ${escapeHtml(companyName)}<br>${escapeHtml(company.address)}<br>Phone: ${escapeHtml(company.phone)}</p><hr><p><strong>To:</strong> ${escapeHtml(supplier?.name||'—')}<br>${escapeHtml(supplier?.address||'')}<br>Phone: ${escapeHtml(supplier?.phone||'')}</p><p><strong>Order ID:</strong> ${escapeHtml(pur.id)}<br><strong>Date:</strong> ${DB.fmtDate(pur.date,true)}</p><table><thead><tr><th>Product ID</th><th>Description</th><th>Size</th><th>Qty</th><th>Unit Cost</th><th>Total</th></tr></thead><tbody>${itemsHtml}</tbody></table><div class="totals"><p><strong>Total Cost:</strong> ${DB.fmtMoney(pur.totalCost)}</p></div><p><strong>Payment Method:</strong> ${escapeHtml(pur.paymentMethod||'—')}<br><strong>Transaction ID:</strong> ${escapeHtml(pur.transactionId||'—')}</p><div class="footer"><p>Thank you for your business</p></div></body></html>`;const w=window.open('','_blank','width=800,height=600');w.document.write(html);w.document.close();w.focus();}
 
@@ -1212,25 +1251,13 @@ function restoreFromTrash(trashId){
     switch(type){
         case 'customer': DB._data.customers.push(data); break;
         case 'product': DB._data.products.push(data); break;
-        case 'invoice':
-            DB._data.invoices.push(data);
-            DB.applyInvoiceStockDeduction(data);
-            DB.updateCustomerTotalsFromInvoice(data);
+        case 'invoice': DB._data.invoices.push(data); DB.applyInvoiceStockDeduction(data); DB.updateCustomerTotalsFromInvoice(data);
             const linkedSale = DB._data.trash.find(t => t.type === 'sale' && t.data.invoiceId === data.id);
-            if (linkedSale) {
-                DB._data.sales.push(linkedSale.data);
-                DB._data.trash = DB._data.trash.filter(t => t.id !== linkedSale.id);
-            }
+            if (linkedSale) { DB._data.sales.push(linkedSale.data); DB._data.trash = DB._data.trash.filter(t => t.id !== linkedSale.id); }
             const linkedInc = DB._data.trash.find(t => t.type === 'income' && t.data.referenceId === data.id);
-            if (linkedInc) {
-                DB._data.finance.income.push(linkedInc.data);
-                DB._data.trash = DB._data.trash.filter(t => t.id !== linkedInc.id);
-            }
+            if (linkedInc) { DB._data.finance.income.push(linkedInc.data); DB._data.trash = DB._data.trash.filter(t => t.id !== linkedInc.id); }
             break;
-        case 'purchase':
-            DB._data.purchases.push(data);
-            DB.applyPurchaseStock(data);
-            break;
+        case 'purchase': DB._data.purchases.push(data); DB.applyPurchaseStock(data); break;
         case 'sale': DB._data.sales.push(data); break;
         case 'income': DB._data.finance.income.push(data); break;
         case 'expense': DB._data.finance.expenses.push(data); break;
@@ -1242,232 +1269,75 @@ function restoreFromTrash(trashId){
         case 'auditLog': DB._data.auditLog.push(data); break;
         default: restored = false; break;
     }
-    if (restored) {
-        DB._data.trash.splice(idx, 1);
-        addAudit('restore', `Restored ${type} ${data.id || data.name || ''} from trash`);
-        DB.save();
-        navigate('trash');
-        toast('Item restored');
-        updateAlertBadge();
-    } else {
-        toast('Cannot restore this type');
-    }
+    if (restored) { DB._data.trash.splice(idx, 1); addAudit('restore', `Restored ${type} ${data.id || data.name || ''} from trash`); DB.save(); navigate('trash'); toast('Item restored'); updateAlertBadge(); }
+    else toast('Cannot restore this type');
 }
-function permanentDeleteFromTrash(trashId){
-    if(!confirm('Permanently delete this item? This cannot be undone.')) return;
-    DB._data.trash = DB._data.trash.filter(t => t.id !== trashId);
-    addAudit('permanent_delete', `Item ${trashId} permanently deleted`);
-    DB.save();
-    navigate('trash');
-    toast('Permanently deleted');
-}
-function emptyTrash(){
-    if(!confirm('Permanently delete ALL items in trash? This cannot be undone.')) return;
-    const count = DB._data.trash.length;
-    DB._data.trash = [];
-    addAudit('empty_trash', `Trash emptied (${count} items)`);
-    DB.save();
-    navigate('trash');
-    toast('Trash emptied');
-}
-function clearAllDataToTrash(){
-    if(!confirm('Move ALL data to trash? You can restore or permanently delete later.')) return;
-    const typeMap = {
-        customers: 'customer', products: 'product', invoices: 'invoice',
-        purchases: 'purchase', employees: 'employee', suppliers: 'supplier',
-        deliveries: 'delivery', offers: 'offer', sales: 'sale',
-        reports: 'report', auditLog: 'auditLog'
-    };
-    Object.entries(typeMap).forEach(([key, trashType]) => {
-        const arr = DB._data[key];
-        if (Array.isArray(arr)) arr.forEach(item => DB.moveToTrash(trashType, item));
-    });
-    DB._data.finance.income.forEach(item => DB.moveToTrash('income', item));
-    DB._data.finance.expenses.forEach(item => DB.moveToTrash('expense', item));
-    DB._data.customers = []; DB._data.products = []; DB._data.invoices = [];
-    DB._data.sales = []; DB._data.finance.income = []; DB._data.finance.expenses = [];
-    DB._data.employees = []; DB._data.suppliers = []; DB._data.purchases = [];
-    DB._data.deliveries = []; DB._data.offers = []; DB._data.reports = [];
-    DB._data.auditLog = [];
-    DB.save();
-    toast('All data moved to trash');
-    updateAlertBadge();
-    navigate('dashboard');
-}
+function permanentDeleteFromTrash(trashId){ if(!confirm('Permanently delete this item? This cannot be undone.')) return; DB._data.trash = DB._data.trash.filter(t => t.id !== trashId); addAudit('permanent_delete', `Item ${trashId} permanently deleted`); DB.save(); navigate('trash'); toast('Permanently deleted'); }
+function emptyTrash(){ if(!confirm('Permanently delete ALL items in trash? This cannot be undone.')) return; const count = DB._data.trash.length; DB._data.trash = []; addAudit('empty_trash', `Trash emptied (${count} items)`); DB.save(); navigate('trash'); toast('Trash emptied'); }
+function clearAllDataToTrash(){ if(!confirm('Move ALL data to trash? You can restore or permanently delete later.')) return; const typeMap = { customers: 'customer', products: 'product', invoices: 'invoice', purchases: 'purchase', employees: 'employee', suppliers: 'supplier', deliveries: 'delivery', offers: 'offer', sales: 'sale', reports: 'report', auditLog: 'auditLog' }; Object.entries(typeMap).forEach(([key, trashType]) => { const arr = DB._data[key]; if (Array.isArray(arr)) arr.forEach(item => DB.moveToTrash(trashType, item)); }); DB._data.finance.income.forEach(item => DB.moveToTrash('income', item)); DB._data.finance.expenses.forEach(item => DB.moveToTrash('expense', item)); DB._data.customers = []; DB._data.products = []; DB._data.invoices = []; DB._data.sales = []; DB._data.finance.income = []; DB._data.finance.expenses = []; DB._data.employees = []; DB._data.suppliers = []; DB._data.purchases = []; DB._data.deliveries = []; DB._data.offers = []; DB._data.reports = []; DB._data.auditLog = []; DB.save(); toast('All data moved to trash'); updateAlertBadge(); navigate('dashboard'); }
 
 // ==================== AUDIT LOG PANEL ====================
-function renderAuditLogPanel(){
-    const logs = [...DB._data.auditLog].reverse().slice(0, 200);
-    let html = `<div class="card"><div class="card-header"><h3>Audit Log (last 200)</h3></div><div class="table-shell"><table><thead><tr><th>Timestamp</th><th>User</th><th>Action</th><th>Details</th></tr></thead><tbody>`;
-    logs.forEach(log => {
-        html += `<tr><td data-date="${log.timestamp}">${DB.fmtDate(log.timestamp, true)}</td><td>${escapeHtml(log.user)}</td><td>${escapeHtml(log.action)}</td><td>${escapeHtml(log.details)}</td></tr>`;
-    });
-    html += `</tbody></table></div></div>`;
-    return html;
-}
+function renderAuditLogPanel(){ const logs = [...DB._data.auditLog].reverse().slice(0, 200); let html = `<div class="card"><div class="card-header"><h3>Audit Log (last 200)</h3></div><div class="table-shell"><table><thead><tr><th>Timestamp</th><th>User</th><th>Action</th><th>Details</th></tr></thead><tbody>`; logs.forEach(log => { html += `<tr><td data-date="${log.timestamp}">${DB.fmtDate(log.timestamp, true)}</td><td>${escapeHtml(log.user)}</td><td>${escapeHtml(log.action)}</td><td>${escapeHtml(log.details)}</td></tr>`; }); html += `</tbody></table></div></div>`; return html; }
 
 // ==================== MULTIPLE BUSINESS PROFILES ====================
-function getProfiles(){
-    const raw = localStorage.getItem('erp_profiles');
-    try { return raw ? JSON.parse(raw) : []; } catch(e) { return []; }
-}
-function saveProfiles(profiles){
-    localStorage.setItem('erp_profiles', JSON.stringify(profiles));
-}
-function switchProfile(profileId){
-    DB.save();
-    activeProfileId = profileId;
-    localStorage.setItem('erp_activeProfileId', profileId);
-    DB._data = {customers:[],products:[],invoices:[],sales:[],finance:{income:[],expenses:[]},employees:[],suppliers:[],purchases:[],deliveries:[],offers:[],reports:[],auditLog:[],trash:[],config:{company:{name:'Acme Corp',address:'123 Main St, Springfield, IL 62701',phone:'+1-555-0000'},language:'en',country:'US',currency:'USD',timezone:'America/New_York',theme:{mode:'light',accentColor:'#6750A4'},settings:{autoBackup:true,performanceMode:'standard',googleClientId:DB._data.config.settings.googleClientId||''},logo:null}};
-    DB.load();
-    updateProfileDisplay();
-    navigate(currentPanel);
-    toast('Switched to ' + (getProfiles().find(p=>p.id===profileId)?.name || 'Unknown'));
-}
-function updateProfileDisplay(){
-    const profiles = getProfiles();
-    const current = profiles.find(p=>p.id===activeProfileId);
-    const display = document.getElementById('profileNameDisplay');
-    if (display) display.textContent = current ? current.name : 'No Profile';
-}
-function createProfile(name){
-    const profiles = getProfiles();
-    const newProfile = { id: DB.uid('PROF'), name: name, createdAt: DB.now() };
-    profiles.push(newProfile);
-    saveProfiles(profiles);
-    return newProfile;
-}
-function renameProfile(profileId, newName){
-    const profiles = getProfiles();
-    const profile = profiles.find(p=>p.id===profileId);
-    if (profile) { profile.name = newName; saveProfiles(profiles); }
-}
-function deleteProfile(profileId){
-    const profiles = getProfiles();
-    if (profiles.length <= 1) return toast('Cannot delete the last profile.');
-    Object.keys(localStorage).forEach(key => {
-        if (key.startsWith('erp_' + profileId + '_')) localStorage.removeItem(key);
-    });
-    const remaining = profiles.filter(p=>p.id!==profileId);
-    saveProfiles(remaining);
-    if (activeProfileId === profileId) switchProfile(remaining[0].id);
-    updateProfileDisplay();
-    navigate('businessProfiles');
-    toast('Profile deleted');
-}
-function openProfileSwitcher(){
-    const profiles = getProfiles();
-    let html = '<div style="display:flex;flex-direction:column;gap:12px;">';
-    html += '<h4>Switch Business Profile</h4>';
-    html += '<select id="profileSelect" style="width:100%;">';
-    profiles.forEach(p => {
-        html += `<option value="${p.id}" ${p.id===activeProfileId?'selected':''}>${escapeHtml(p.name)}</option>`;
-    });
-    html += '</select>';
-    html += '<div class="flex-between"><button class="btn btn-filled" id="switchProfileBtn"><span class="material-symbols-rounded">swap_horiz</span> Switch</button>';
-    html += '<button class="btn btn-outlined" id="newProfileBtn"><span class="material-symbols-rounded">add</span> New Profile</button>';
-    html += '<button class="btn btn-outlined" id="renameProfileBtn"><span class="material-symbols-rounded">edit</span> Rename</button>';
-    html += '<button class="btn btn-danger" id="deleteProfileBtn"><span class="material-symbols-rounded">delete</span> Delete</button></div>';
-    html += '</div>';
-    const place = $('#modalPlace');
-    place.innerHTML = `<div class="modal-mask" id="modalMask"><div class="modal-panel" style="max-width:500px;"><div class="modal-body">${html}</div><div class="flex-between mt-4"><button class="btn btn-outlined cancel-modal" onclick="closeModal()">Close</button></div></div></div>`;
-    place.classList.remove('hidden');
-    document.getElementById('switchProfileBtn').onclick = () => {
-        const sel = document.getElementById('profileSelect').value;
-        closeModal();
-        switchProfile(sel);
-    };
-    document.getElementById('newProfileBtn').onclick = () => {
-        const name = prompt('Enter new business profile name:');
-        if (name && name.trim()) {
-            const newProf = createProfile(name.trim());
-            closeModal();
-            switchProfile(newProf.id);
-        }
-    };
-    document.getElementById('renameProfileBtn').onclick = () => {
-        const sel = document.getElementById('profileSelect');
-        const profId = sel.value;
-        const currentName = sel.options[sel.selectedIndex].text;
-        const newName = prompt('Rename profile:', currentName);
-        if (newName && newName.trim()) {
-            renameProfile(profId, newName.trim());
-            closeModal();
-            updateProfileDisplay();
-            navigate('businessProfiles');
-            toast('Profile renamed');
-        }
-    };
-    document.getElementById('deleteProfileBtn').onclick = () => {
-        const sel = document.getElementById('profileSelect');
-        const profId = sel.value;
-        if (confirm('Delete this profile and all its data? This cannot be undone.')) {
-            closeModal();
-            deleteProfile(profId);
-        }
-    };
-}
-function renderBusinessProfiles(){
-    const profiles = getProfiles();
-    let html = `<div class="card"><div class="card-header"><h3>Business Profiles (${profiles.length})</h3><button class="btn btn-filled" id="createProfileBtn"><span class="material-symbols-rounded">add</span> Create</button></div><div class="table-shell"><table><thead><tr><th>Name</th><th>ID</th><th>Created</th><th>Actions</th></tr></thead><tbody>`;
-    profiles.forEach(p => {
-        html += `<tr><td><strong>${escapeHtml(p.name)}</strong> ${p.id===activeProfileId?'<span class="badge badge-blue">active</span>':''}</td><td>${p.id}</td><td>${DB.fmtDate(p.createdAt,true)}</td><td>`;
-        if (p.id !== activeProfileId) {
-            html += `<button class="btn btn-tonal btn-sm switch-prof" data-id="${p.id}" title="Switch"><span class="material-symbols-rounded">swap_horiz</span></button> `;
-        }
-        html += `<button class="btn btn-outlined btn-sm rename-prof" data-id="${p.id}" title="Rename"><span class="material-symbols-rounded">edit</span></button> <button class="btn btn-danger btn-sm del-prof" data-id="${p.id}" title="Delete"><span class="material-symbols-rounded">delete</span></button></td></tr>`;
-    });
-    html += `</tbody></table></div></div>`;
-    return html;
-}
+function getProfiles(){ const raw = localStorage.getItem('erp_profiles'); try { return raw ? JSON.parse(raw) : []; } catch(e) { return []; } }
+function saveProfiles(profiles){ localStorage.setItem('erp_profiles', JSON.stringify(profiles)); }
+function switchProfile(profileId){ DB.save(); activeProfileId = profileId; localStorage.setItem('erp_activeProfileId', profileId); DB._data = {customers:[],products:[],invoices:[],sales:[],finance:{income:[],expenses:[]},employees:[],suppliers:[],purchases:[],deliveries:[],offers:[],reports:[],auditLog:[],trash:[],config:{company:{name:'Acme Corp',address:'123 Main St, Springfield, IL 62701',phone:'+1-555-0000'},language:'en',country:'US',currency:'USD',timezone:'America/New_York',theme:{mode:'light',accentColor:'#6750A4'},settings:{autoBackup:true,performanceMode:'standard',googleClientId:DB._data.config.settings.googleClientId||''},logo:null}}; DB.load(); updateProfileDisplay(); navigate(currentPanel); toast('Switched to ' + (getProfiles().find(p=>p.id===profileId)?.name || 'Unknown')); }
+function updateProfileDisplay(){ const profiles = getProfiles(); const current = profiles.find(p=>p.id===activeProfileId); const display = document.getElementById('profileNameDisplay'); if (display) display.textContent = current ? current.name : 'No Profile'; }
+function createProfile(name){ const profiles = getProfiles(); const newProfile = { id: DB.uid('PROF'), name: name, createdAt: DB.now() }; profiles.push(newProfile); saveProfiles(profiles); return newProfile; }
+function renameProfile(profileId, newName){ const profiles = getProfiles(); const profile = profiles.find(p=>p.id===profileId); if (profile) { profile.name = newName; saveProfiles(profiles); } }
+function deleteProfile(profileId){ const profiles = getProfiles(); if (profiles.length <= 1) return toast('Cannot delete the last profile.'); Object.keys(localStorage).forEach(key => { if (key.startsWith('erp_' + profileId + '_')) localStorage.removeItem(key); }); const remaining = profiles.filter(p=>p.id!==profileId); saveProfiles(remaining); if (activeProfileId === profileId) switchProfile(remaining[0].id); updateProfileDisplay(); navigate('businessProfiles'); toast('Profile deleted'); }
+function openProfileSwitcher(){ const profiles = getProfiles(); let html = '<div style="display:flex;flex-direction:column;gap:12px;">'; html += '<h4>Switch Business Profile</h4>'; html += '<select id="profileSelect" style="width:100%;">'; profiles.forEach(p => { html += `<option value="${p.id}" ${p.id===activeProfileId?'selected':''}>${escapeHtml(p.name)}</option>`; }); html += '</select>'; html += '<div class="flex-between"><button class="btn btn-filled" id="switchProfileBtn"><span class="material-symbols-rounded">swap_horiz</span> Switch</button>'; html += '<button class="btn btn-outlined" id="newProfileBtn"><span class="material-symbols-rounded">add</span> New Profile</button>'; html += '<button class="btn btn-outlined" id="renameProfileBtn"><span class="material-symbols-rounded">edit</span> Rename</button>'; html += '<button class="btn btn-danger" id="deleteProfileBtn"><span class="material-symbols-rounded">delete</span> Delete</button></div>'; html += '</div>'; const place = $('#modalPlace'); place.innerHTML = `<div class="modal-mask" id="modalMask"><div class="modal-panel" style="max-width:500px;"><div class="modal-body">${html}</div><div class="flex-between mt-4"><button class="btn btn-outlined cancel-modal" onclick="closeModal()">Close</button></div></div></div>`; place.classList.remove('hidden'); document.getElementById('switchProfileBtn').onclick = () => { const sel = document.getElementById('profileSelect').value; closeModal(); switchProfile(sel); }; document.getElementById('newProfileBtn').onclick = () => { const name = prompt('Enter new business profile name:'); if (name && name.trim()) { const newProf = createProfile(name.trim()); closeModal(); switchProfile(newProf.id); } }; document.getElementById('renameProfileBtn').onclick = () => { const sel = document.getElementById('profileSelect'); const profId = sel.value; const currentName = sel.options[sel.selectedIndex].text; const newName = prompt('Rename profile:', currentName); if (newName && newName.trim()) { renameProfile(profId, newName.trim()); closeModal(); updateProfileDisplay(); navigate('businessProfiles'); toast('Profile renamed'); } }; document.getElementById('deleteProfileBtn').onclick = () => { const sel = document.getElementById('profileSelect'); const profId = sel.value; if (confirm('Delete this profile and all its data? This cannot be undone.')) { closeModal(); deleteProfile(profId); } }; }
+function renderBusinessProfiles(){ const profiles = getProfiles(); let html = `<div class="card"><div class="card-header"><h3>Business Profiles (${profiles.length})</h3><button class="btn btn-filled" id="createProfileBtn"><span class="material-symbols-rounded">add</span> Create</button></div><div class="table-shell"><table><thead><tr><th>Name</th><th>ID</th><th>Created</th><th>Actions</th></tr></thead><tbody>`; profiles.forEach(p => { html += `<tr><td><strong>${escapeHtml(p.name)}</strong> ${p.id===activeProfileId?'<span class="badge badge-blue">active</span>':''}</td><td>${p.id}</td><td>${DB.fmtDate(p.createdAt,true)}</td><td>`; if (p.id !== activeProfileId) html += `<button class="btn btn-tonal btn-sm switch-prof" data-id="${p.id}" title="Switch"><span class="material-symbols-rounded">swap_horiz</span></button> `; html += `<button class="btn btn-outlined btn-sm rename-prof" data-id="${p.id}" title="Rename"><span class="material-symbols-rounded">edit</span></button> <button class="btn btn-danger btn-sm del-prof" data-id="${p.id}" title="Delete"><span class="material-symbols-rounded">delete</span></button></td></tr>`; }); html += `</tbody></table></div></div>`; return html; }
 
 function rebindEvents(){
-document.getElementById('addCustBtn')?.addEventListener('click',()=>openCustomerForm());$$('.edit-cust').forEach(b=>b.onclick=()=>openCustomerForm(b.dataset.id));$$('.del-cust').forEach(b=>b.onclick=()=>deleteCustomer(b.dataset.id));
-document.getElementById('addProdBtn')?.addEventListener('click',()=>openProductForm());$$('.edit-prod').forEach(b=>b.onclick=()=>openProductForm(b.dataset.id));$$('.del-prod').forEach(b=>b.onclick=()=>deleteProduct(b.dataset.id));
-document.getElementById('addInvBtn')?.addEventListener('click',()=>openInvoiceForm());$$('.edit-inv').forEach(b=>b.onclick=()=>openInvoiceForm(b.dataset.id));$$('.del-inv').forEach(b=>b.onclick=()=>deleteInvoice(b.dataset.id));$$('.print-inv').forEach(b=>b.onclick=()=>printInvoice(b.dataset.id));$$('.qr-btn').forEach(b=>b.addEventListener('click',()=>showQRCode(b.dataset.id)));$$('.mail-inv').forEach(b=>b.addEventListener('click',()=>mailInvoiceWithPDF(b.dataset.id)));
-document.getElementById('addIncBtn')?.addEventListener('click',()=>openFinanceForm('income'));document.getElementById('addExpBtn')?.addEventListener('click',()=>openFinanceForm('expense'));$$('.del-fin-inc').forEach(b=>b.onclick=()=>deleteFinanceItem('income',b.dataset.id));$$('.del-fin-exp').forEach(b=>b.onclick=()=>deleteFinanceItem('expense',b.dataset.id));
-document.getElementById('addEmpBtn')?.addEventListener('click',()=>openEmployeeForm());$$('.edit-emp').forEach(b=>b.onclick=()=>openEmployeeForm(b.dataset.id));$$('.del-emp').forEach(b=>b.onclick=()=>deleteEmployee(b.dataset.id));
-document.getElementById('addSuppBtn')?.addEventListener('click',()=>openSupplierForm());$$('.edit-supp').forEach(b=>b.onclick=()=>openSupplierForm(b.dataset.id));$$('.del-supp').forEach(b=>b.onclick=()=>deleteSupplier(b.dataset.id));
-document.getElementById('addPurchBtn')?.addEventListener('click',()=>openPurchaseForm());$$('.edit-purch').forEach(b=>b.onclick=()=>openPurchaseForm(b.dataset.id));$$('.print-purch').forEach(b=>b.onclick=()=>printPurchase(b.dataset.id));$$('.del-purch').forEach(b=>b.onclick=()=>deletePurchase(b.dataset.id));
-document.getElementById('addDelBtn')?.addEventListener('click',()=>openDeliveryForm());$$('.edit-del').forEach(b=>b.onclick=()=>openDeliveryForm(b.dataset.id));$$('.del-del').forEach(b=>b.onclick=()=>deleteDelivery(b.dataset.id));
-document.getElementById('addOfferBtn')?.addEventListener('click',()=>openOfferForm());$$('.edit-offer').forEach(b=>b.onclick=()=>openOfferForm(b.dataset.id));$$('.del-offer').forEach(b=>b.onclick=()=>deleteOffer(b.dataset.id));
-document.getElementById('genReportBtn')?.addEventListener('click',generateReport);document.getElementById('settingsForm')?.addEventListener('submit',saveSettings);
-document.getElementById('exportDataBtn')?.addEventListener('click',exportAllData);
-document.getElementById('importDataBtn')?.addEventListener('click',()=>document.getElementById('importFileInput').click());
-document.getElementById('clearDataBtn')?.addEventListener('click', clearAllDataToTrash);
-document.getElementById('createProfileBtn')?.addEventListener('click',()=>{
-    const name = prompt('Enter business profile name:');
-    if (name && name.trim()) {
-        const newProf = createProfile(name.trim());
-        switchProfile(newProf.id);
-    }
-});
-$$('.switch-prof').forEach(b=>b.onclick=()=>switchProfile(b.dataset.id));
-$$('.rename-prof').forEach(b=>{
-    b.onclick=()=>{
-        const id = b.dataset.id;
-        const profiles = getProfiles();
-        const profile = profiles.find(p=>p.id===id);
-        const newName = prompt('Rename profile:', profile?.name || '');
-        if (newName && newName.trim()) {
-            renameProfile(id, newName.trim());
-            updateProfileDisplay();
-            navigate('businessProfiles');
-            toast('Profile renamed');
-        }
-    };
-});
-$$('.del-prof').forEach(b=>{
-    b.onclick=()=>{
-        if (confirm('Delete this profile and all its data?')) {
-            deleteProfile(b.dataset.id);
-        }
-    };
-});
-document.getElementById('signOutBtn')?.addEventListener('click', signOut);
-document.getElementById('emptyTrashBtn')?.addEventListener('click', emptyTrash);
-$$('.restore-trash').forEach(b=>b.onclick=()=>restoreFromTrash(b.dataset.id));
-$$('.perm-delete-trash').forEach(b=>b.onclick=()=>permanentDeleteFromTrash(b.dataset.id));
+    const ge = id => document.getElementById(id);
+    if (ge('addCustBtn')) ge('addCustBtn').onclick = () => openCustomerForm();
+    if (ge('addProdBtn')) ge('addProdBtn').onclick = () => openProductForm();
+    if (ge('addInvBtn')) ge('addInvBtn').onclick = () => openInvoiceForm();
+    if (ge('addIncBtn')) ge('addIncBtn').onclick = () => openFinanceForm('income');
+    if (ge('addExpBtn')) ge('addExpBtn').onclick = () => openFinanceForm('expense');
+    if (ge('addEmpBtn')) ge('addEmpBtn').onclick = () => openEmployeeForm();
+    if (ge('addSuppBtn')) ge('addSuppBtn').onclick = () => openSupplierForm();
+    if (ge('addPurchBtn')) ge('addPurchBtn').onclick = () => openPurchaseForm();
+    if (ge('addDelBtn')) ge('addDelBtn').onclick = () => openDeliveryForm();
+    if (ge('addOfferBtn')) ge('addOfferBtn').onclick = () => openOfferForm();
+    if (ge('genReportBtn')) ge('genReportBtn').onclick = generateReport;
+    if (ge('settingsForm')) ge('settingsForm').onsubmit = saveSettings;
+    if (ge('exportDataBtn')) ge('exportDataBtn').onclick = exportAllData;
+    if (ge('importDataBtn')) ge('importDataBtn').onclick = () => ge('importFileInput').click();
+    if (ge('clearDataBtn')) ge('clearDataBtn').onclick = clearAllDataToTrash;
+    if (ge('createProfileBtn')) ge('createProfileBtn').onclick = () => { const name = prompt('Enter business profile name:'); if (name && name.trim()) { const newProf = createProfile(name.trim()); switchProfile(newProf.id); } };
+    if (ge('signOutBtn')) ge('signOutBtn').onclick = signOut;
+    if (ge('emptyTrashBtn')) ge('emptyTrashBtn').onclick = emptyTrash;
+    
+    $$('.edit-cust').forEach(b=>b.onclick=()=>openCustomerForm(b.dataset.id));
+    $$('.del-cust').forEach(b=>b.onclick=()=>deleteCustomer(b.dataset.id));
+    $$('.edit-prod').forEach(b=>b.onclick=()=>openProductForm(b.dataset.id));
+    $$('.del-prod').forEach(b=>b.onclick=()=>deleteProduct(b.dataset.id));
+    $$('.edit-inv').forEach(b=>b.onclick=()=>openInvoiceForm(b.dataset.id));
+    $$('.del-inv').forEach(b=>b.onclick=()=>deleteInvoice(b.dataset.id));
+    $$('.print-inv').forEach(b=>b.onclick=()=>printInvoice(b.dataset.id));
+    $$('.qr-btn').forEach(b=>b.onclick=()=>showQRCode(b.dataset.id));
+    $$('.mail-inv').forEach(b=>b.onclick=()=>mailInvoiceWithPDF(b.dataset.id));
+    $$('.del-fin-inc').forEach(b=>b.onclick=()=>deleteFinanceItem('income',b.dataset.id));
+    $$('.del-fin-exp').forEach(b=>b.onclick=()=>deleteFinanceItem('expense',b.dataset.id));
+    $$('.edit-emp').forEach(b=>b.onclick=()=>openEmployeeForm(b.dataset.id));
+    $$('.del-emp').forEach(b=>b.onclick=()=>deleteEmployee(b.dataset.id));
+    $$('.edit-supp').forEach(b=>b.onclick=()=>openSupplierForm(b.dataset.id));
+    $$('.del-supp').forEach(b=>b.onclick=()=>deleteSupplier(b.dataset.id));
+    $$('.edit-purch').forEach(b=>b.onclick=()=>openPurchaseForm(b.dataset.id));
+    $$('.print-purch').forEach(b=>b.onclick=()=>printPurchase(b.dataset.id));
+    $$('.del-purch').forEach(b=>b.onclick=()=>deletePurchase(b.dataset.id));
+    $$('.edit-del').forEach(b=>b.onclick=()=>openDeliveryForm(b.dataset.id));
+    $$('.del-del').forEach(b=>b.onclick=()=>deleteDelivery(b.dataset.id));
+    $$('.edit-offer').forEach(b=>b.onclick=()=>openOfferForm(b.dataset.id));
+    $$('.del-offer').forEach(b=>b.onclick=()=>deleteOffer(b.dataset.id));
+    $$('.switch-prof').forEach(b=>b.onclick=()=>switchProfile(b.dataset.id));
+    $$('.rename-prof').forEach(b=>{ b.onclick=()=>{ const id = b.dataset.id; const profiles = getProfiles(); const profile = profiles.find(p=>p.id===id); const newName = prompt('Rename profile:', profile?.name || ''); if (newName && newName.trim()) { renameProfile(id, newName.trim()); updateProfileDisplay(); navigate('businessProfiles'); toast('Profile renamed'); } }; });
+    $$('.del-prof').forEach(b=>{ b.onclick=()=>{ if (confirm('Delete this profile and all its data?')) deleteProfile(b.dataset.id); }; });
+    $$('.restore-trash').forEach(b=>b.onclick=()=>restoreFromTrash(b.dataset.id));
+    $$('.perm-delete-trash').forEach(b=>b.onclick=()=>permanentDeleteFromTrash(b.dataset.id));
 }
 window._filterTable=filterTable;
 window._invoiceCustomerChanged=function(customerId){const customer=DB._data.customers.find(c=>c.id===customerId);const nameField=document.querySelector('[name="custName"]');const phoneField=document.querySelector('[name="custPhone"]');const emailField=document.querySelector('[name="custEmail"]');const addrField=document.querySelector('[name="customerAddress"]');if(customer){if(nameField)nameField.value=customer.personalInfo?.fullName||'';if(phoneField)phoneField.value=customer.personalInfo?.phone||'';if(emailField)emailField.value=customer.personalInfo?.email||'';if(addrField){const a=customer.personalInfo?.address;addrField.value=a?[a.street,a.city,a.state,a.country,a.postalCode].filter(Boolean).join(', '):'';}}else{if(nameField)nameField.value='';if(phoneField)phoneField.value='';if(emailField)emailField.value='';if(addrField)addrField.value='';}};
@@ -1477,62 +1347,210 @@ window._roleChanged=function(selectEl){const val=selectEl.value;const customInpu
 window._getRoleValue=function(panel){const sel=panel.querySelector('[name="roleSelect"]');if(!sel)return'Employee';if(sel.value==='__other__'){const custom=panel.querySelector('[name="customRole"]');return custom?custom.value.trim()||'Employee':'Employee';}return sel.value;};
 window._currentProductPhoto = null;
 window._productPhotoRemoved = false;
-window._handleProductPhoto = function(input) {
-    const file = input.files[0];
-    if (!file) return;
-    window._productPhotoRemoved = false;
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        window._currentProductPhoto = e.target.result;
-        const preview = input.parentElement.querySelector('.logo-preview');
-        if (preview) preview.innerHTML = `<img src="${e.target.result}" alt="Product Photo" style="max-width:120px; max-height:80px; border:1px solid var(--md-outline-variant); border-radius:8px; margin-top:6px;">`;
-    };
-    reader.readAsDataURL(file);
-};
-window._removeProductPhoto = function() {
-    window._productPhotoRemoved = true;
-    window._currentProductPhoto = null;
-    const fileInput = document.getElementById('productPhotoInput');
-    if (fileInput) fileInput.value = '';
-    const preview = document.getElementById('prodPhotoPreview');
-    if (preview) {
-        preview.innerHTML = '<div style="color:var(--md-on-surface-variant);">No photo</div>';
+window._handleProductPhoto = function(input) { const file = input.files[0]; if (!file) return; window._productPhotoRemoved = false; const reader = new FileReader(); reader.onload = function(e) { window._currentProductPhoto = e.target.result; const preview = input.parentElement.querySelector('.logo-preview'); if (preview) preview.innerHTML = `<img src="${e.target.result}" alt="Product Photo" style="max-width:120px; max-height:80px; border:1px solid var(--md-outline-variant); border-radius:8px; margin-top:6px;">`; }; reader.readAsDataURL(file); };
+window._removeProductPhoto = function() { window._productPhotoRemoved = true; window._currentProductPhoto = null; const fileInput = document.getElementById('productPhotoInput'); if (fileInput) fileInput.value = ''; const preview = document.getElementById('prodPhotoPreview'); if (preview) preview.innerHTML = '<div style="color:var(--md-on-surface-variant);">No photo</div>'; };
+window._updateProductSuggestions = function() { const categoryList = document.getElementById('categorySuggestions'); const brandList = document.getElementById('brandSuggestions'); if (!categoryList || !brandList) return; const categories = new Set(DB._data.products.filter(p=>p.basicInfo?.category).map(p=>p.basicInfo.category)); const brands = new Set(DB._data.products.filter(p=>p.basicInfo?.brand).map(p=>p.basicInfo.brand)); categoryList.innerHTML = ''; brandList.innerHTML = ''; categories.forEach(cat => { const opt = document.createElement('option'); opt.value = cat; categoryList.appendChild(opt); }); brands.forEach(br => { const opt = document.createElement('option'); opt.value = br; brandList.appendChild(opt); }); };
+
+// ==================== SERVER UPTIME ====================
+let serverStartTime = null;
+function getServerStartTime() {
+    const raw = localStorage.getItem('erp_serverStartTime');
+    if (raw) { try { return new Date(raw); } catch(e) {} }
+    const now = new Date();
+    localStorage.setItem('erp_serverStartTime', now.toISOString());
+    return now;
+}
+function updateUptime() {
+    const now = new Date();
+    const midnight = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const dailyMs = now - midnight;
+    const dailySec = Math.floor(dailyMs / 1000);
+    const dailyH = Math.floor(dailySec / 3600);
+    const dailyM = Math.floor((dailySec % 3600) / 60);
+    const dailyS = dailySec % 60;
+    const lifetimeMs = now - serverStartTime;
+    const lifetimeSec = Math.floor(lifetimeMs / 1000);
+    const lifetimeD = Math.floor(lifetimeSec / 86400);
+    const lifetimeH = Math.floor((lifetimeSec % 86400) / 3600);
+    const lifetimeM = Math.floor((lifetimeSec % 3600) / 60);
+    const lifetimeS = lifetimeSec % 60;
+    const dailyEl = document.getElementById('dailyUptime');
+    const lifetimeEl = document.getElementById('lifetimeUptime');
+    if (dailyEl) dailyEl.textContent = `Daily: ${dailyH}h ${dailyM}m ${dailyS}s`;
+    if (lifetimeEl) lifetimeEl.textContent = `Lifetime: ${lifetimeD}d ${lifetimeH}h ${lifetimeM}m ${lifetimeS}s`;
+}
+
+// ==================== CALCULATOR ====================
+function initCalculator() {
+    const calcPopup = document.getElementById('calcPopup');
+    const calcDisplay = document.getElementById('calcDisplay');
+    const calcToggleBtn = document.getElementById('calcToggleBtn');
+    const calcCloseBtn = document.getElementById('calcCloseBtn');
+    const calcHeader = document.getElementById('calcHeader');
+    
+    let expression = '0';
+    let shouldReset = false;
+    let dragState = { active: false, startX: 0, startY: 0, left: 100, top: 100 };
+    
+    function updateDisplay() {
+        calcDisplay.textContent = expression || '0';
     }
-};
-window._updateProductSuggestions = function() {
-    const categoryList = document.getElementById('categorySuggestions');
-    const brandList = document.getElementById('brandSuggestions');
-    if (!categoryList || !brandList) return;
-    const categories = new Set(DB._data.products.filter(p=>p.basicInfo?.category).map(p=>p.basicInfo.category));
-    const brands = new Set(DB._data.products.filter(p=>p.basicInfo?.brand).map(p=>p.basicInfo.brand));
-    categoryList.innerHTML = '';
-    brandList.innerHTML = '';
-    categories.forEach(cat => { const opt = document.createElement('option'); opt.value = cat; categoryList.appendChild(opt); });
-    brands.forEach(br => { const opt = document.createElement('option'); opt.value = br; brandList.appendChild(opt); });
-};
+    
+    function handleButtonClick(action, value) {
+        if (shouldReset && action !== 'clear' && action !== 'backspace') {
+            expression = '';
+            shouldReset = false;
+        }
+        
+        switch(action) {
+            case 'digit':
+                if (expression === '0' || expression === 'Error') {
+                    expression = value;
+                } else {
+                    expression += value;
+                }
+                break;
+            case 'decimal':
+                const lastNumber = expression.split(/[\+\-\*\/\%]/).pop();
+                if (!lastNumber.includes('.')) {
+                    expression += value;
+                }
+                break;
+            case 'operator':
+                if (expression === '' || expression === 'Error') break;
+                const lastChar = expression.slice(-1);
+                if (['+','-','*','/','%'].includes(lastChar)) {
+                    expression = expression.slice(0, -1) + value;
+                } else {
+                    expression += value;
+                }
+                shouldReset = false;
+                break;
+            case 'equal':
+                try {
+                    const result = Function('"use strict";return (' + expression.replace(/×/g,'*').replace(/÷/g,'/').replace(/−/g,'-') + ')')();
+                    expression = String(result);
+                    shouldReset = true;
+                } catch(e) {
+                    expression = 'Error';
+                    shouldReset = true;
+                }
+                break;
+            case 'clear':
+                expression = '0';
+                shouldReset = true;
+                break;
+            case 'backspace':
+                if (expression.length === 1 || expression === 'Error' || expression === '0') {
+                    expression = '0';
+                    shouldReset = true;
+                } else {
+                    expression = expression.slice(0, -1);
+                }
+                break;
+            case 'percent':
+                try {
+                    const val = Function('"use strict";return (' + expression.replace(/×/g,'*').replace(/÷/g,'/').replace(/−/g,'-') + ')')();
+                    expression = String(val / 100);
+                    shouldReset = true;
+                } catch(e) {
+                    expression = 'Error';
+                    shouldReset = true;
+                }
+                break;
+        }
+        updateDisplay();
+    }
+    
+    // Button click handlers
+    document.querySelectorAll('.calc-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const action = btn.dataset.action;
+            const value = btn.dataset.value;
+            handleButtonClick(action, value);
+        });
+    });
+    
+    // Toggle calculator
+    calcToggleBtn.addEventListener('click', () => {
+        calcPopup.classList.toggle('open');
+        if (calcPopup.classList.contains('open')) {
+            calcDisplay.textContent = expression;
+        }
+    });
+    
+    // Close button (only way to close)
+    calcCloseBtn.addEventListener('click', () => {
+        calcPopup.classList.remove('open');
+    });
+    
+    // Prevent Escape from closing calculator (only close button)
+    // (No event needed; Escape will close modals but not calc)
+    
+    // Draggable logic
+    function onDragStart(e) {
+        const rect = calcPopup.getBoundingClientRect();
+        dragState.left = rect.left;
+        dragState.top = rect.top;
+        if (e.type === 'mousedown') {
+            dragState.startX = e.clientX;
+            dragState.startY = e.clientY;
+            dragState.active = true;
+        } else if (e.type === 'touchstart') {
+            dragState.startX = e.touches[0].clientX;
+            dragState.startY = e.touches[0].clientY;
+            dragState.active = true;
+        }
+        calcPopup.style.transition = 'none';
+    }
+    
+    function onDragMove(e) {
+        if (!dragState.active) return;
+        e.preventDefault();
+        let clientX, clientY;
+        if (e.type === 'mousemove') {
+            clientX = e.clientX;
+            clientY = e.clientY;
+        } else if (e.type === 'touchmove') {
+            clientX = e.touches[0].clientX;
+            clientY = e.touches[0].clientY;
+        }
+        const deltaX = clientX - dragState.startX;
+        const deltaY = clientY - dragState.startY;
+        calcPopup.style.left = (dragState.left + deltaX) + 'px';
+        calcPopup.style.top = (dragState.top + deltaY) + 'px';
+    }
+    
+    function onDragEnd() {
+        dragState.active = false;
+    }
+    
+    calcHeader.addEventListener('mousedown', onDragStart);
+    document.addEventListener('mousemove', onDragMove);
+    document.addEventListener('mouseup', onDragEnd);
+    
+    calcHeader.addEventListener('touchstart', onDragStart, {passive: false});
+    document.addEventListener('touchmove', onDragMove, {passive: false});
+    document.addEventListener('touchend', onDragEnd);
+    
+    // Prevent dragging from closing the calculator
+    calcPopup.addEventListener('mousedown', (e) => {
+        if (e.target === calcPopup) e.preventDefault();
+    });
+}
 
 window.addEventListener('resize',()=>{if(currentPanel==='products')drawInventoryChart();if(currentPanel==='reports')drawReportPieChart();});
 
 function init(){
+    serverStartTime = getServerStartTime();
     let profiles = getProfiles();
-    if (!profiles.length) {
-        const defaultProf = createProfile('Default Business');
-        activeProfileId = defaultProf.id;
-        localStorage.setItem('erp_activeProfileId', activeProfileId);
-        profiles = getProfiles();
-    } else {
-        if (!activeProfileId || !profiles.find(p=>p.id===activeProfileId)) {
-            activeProfileId = profiles[0].id;
-            localStorage.setItem('erp_activeProfileId', activeProfileId);
-        }
-    }
+    if (!profiles.length) { const defaultProf = createProfile('Default Business'); activeProfileId = defaultProf.id; localStorage.setItem('erp_activeProfileId', activeProfileId); profiles = getProfiles(); }
+    else { if (!activeProfileId || !profiles.find(p=>p.id===activeProfileId)) { activeProfileId = profiles[0].id; localStorage.setItem('erp_activeProfileId', activeProfileId); } }
     DB.load();
     if (!DB._data.customers.length) {
         DB._data.customers.push({id:'CUST-001',createdAt:DB.now(),updatedAt:DB.now(),personalInfo:{fullName:'John Doe',phone:'+1-555-0101',email:'john@example.com',address:{street:'456 Oak',city:'Springfield',state:'IL',country:'US',postalCode:'62701'}},businessInfo:{customerType:'retail',source:'online'},financialInfo:{creditLimit:5000,totalSpent:0,totalPaid:0,totalDue:0,loyaltyPoints:0,riskLevel:'low'},status:'active'});
         DB._data.products.push({id:'PROD-001',sku:'SKU-WIDGET',basicInfo:{name:'Premium Widget',category:'Widgets',size:'S,M,L',notes:''},pricing:{costPrice:25,salePrice:49.99,taxRate:8,discount:0},stock:{quantity:150,reserved:0,available:150,reorderLevel:20,warehouseLocation:'Aisle-3'},supplierId:'SUPP-001',createdAt:DB.now(),status:'active'});
-        const demoSupplierId = DB.uid('SUPP');
-        DB._data.suppliers.push({id:demoSupplierId,name:'Global Supplies',company:'Global Inc.',phone:'+1-555-0202',email:'sales@global.com',address:'789 Industrial',paymentTerms:'Net 30',rating:4});
-        DB._data.products[0].supplierId = demoSupplierId;
+        const demoSupplierId = DB.uid('SUPP'); DB._data.suppliers.push({id:demoSupplierId,name:'Global Supplies',company:'Global Inc.',phone:'+1-555-0202',email:'sales@global.com',address:'789 Industrial',paymentTerms:'Net 30',rating:4}); DB._data.products[0].supplierId = demoSupplierId;
         const demoInvoiceId='INV-DEMO-001';const demoCustomer=DB._data.customers[0];const demoProduct=DB._data.products[0];const pastDate=new Date(Date.now()-40*24*60*60*1000).toISOString();
         DB._data.invoices.push({id:demoInvoiceId,createdAt:pastDate,updatedAt:pastDate,businessId:DB._data.config.company?.name,customer:{customerId:demoCustomer.id,name:demoCustomer.personalInfo.fullName,phone:demoCustomer.personalInfo.phone,email:demoCustomer.personalInfo.email,address:'456 Oak, Springfield, IL 62701, US'},seller:null,items:[{productId:demoProduct.id,name:demoProduct.basicInfo.name,size:'M',quantity:2,unitPrice:demoProduct.pricing.salePrice,discount:0,taxRate:demoProduct.pricing.taxRate,subtotal:2*demoProduct.pricing.salePrice*(1+demoProduct.pricing.taxRate/100)}],calculations:{subTotal:2*demoProduct.pricing.salePrice,totalDiscount:0,totalTax:(2*demoProduct.pricing.salePrice)*(demoProduct.pricing.taxRate/100),grandTotal:2*demoProduct.pricing.salePrice*(1+demoProduct.pricing.taxRate/100)},payment:{status:'unpaid',method:'cash',paidAmount:0,dueAmount:2*demoProduct.pricing.salePrice*(1+demoProduct.pricing.taxRate/100),transactionId:''},status:'issued',dueDate:new Date(new Date(pastDate).getTime()+30*24*60*60*1000).toISOString(),note:'',terms:'',termsApplied:false,stockDeducted:false});
         DB.save();
@@ -1543,8 +1561,11 @@ function init(){
     if (googleToken) { updateSyncStatus('Online'); loadFromDrive(); }
     $$('.nav-btn').forEach(b=>b.addEventListener('click',()=>navigate(b.dataset.panel)));
     $('#hamburgerBtn').addEventListener('click',toggleSidebar);$('#sidebarOverlay').addEventListener('click',closeSidebar);$('#themeToggleBtn').addEventListener('click',()=>DB.toggleTheme());
-    document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
-    const updateClock=()=>{const now=new Date();$('#liveClock').textContent=now.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'})+' '+now.toLocaleTimeString('en-US',{hour12:true});};updateClock();setInterval(updateClock,1000);
+    document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ closeModal(); closeModal2(); } });
+    const updateClock=()=>{const now=new Date();$('#liveClock').textContent=now.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'})+' '+now.toLocaleTimeString('en-US',{hour12:true});};
+    updateClock(); setInterval(updateClock,1000);
+    updateUptime(); setInterval(updateUptime, 1000);
+    initCalculator();
     navigate('dashboard');updateAlertBadge();
     if(autoExportInterval)clearInterval(autoExportInterval);
     autoExportInterval=setInterval(()=>{DB.save();},300000);
